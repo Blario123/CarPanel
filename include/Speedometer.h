@@ -12,14 +12,15 @@
 class Speedometer : public QWidget {
 
   Q_OBJECT
+	
 
 public:
-  explicit Speedometer(QWidget *parent = nullptr);
-  ~Speedometer() override;
+	explicit Speedometer(QWidget *parent = nullptr);
+	~Speedometer() override;
+	Dial *dial;
 
 private:
-  Dial *dial;
-  QGridLayout *grid;
+	QGridLayout *grid;
 public slots:
   void paintEvent(QPaintEvent *event);
 };

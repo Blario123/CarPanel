@@ -17,7 +17,7 @@ class CarPanel : public QWidget {
 public:
     explicit CarPanel(QWidget *parent = nullptr);
 
-    ~CarPanel();
+    ~CarPanel() override;
 
 private:
     int setStyle();
@@ -26,18 +26,18 @@ private:
 	Indicator *rightInd;
 
     QGridLayout *layout;
-    Speedometer *left;
+    RevCounter *left;
     Display *center;
-    RevCounter *right;
+    Speedometer *right;
 
 signals:
 
 public slots:
 
 protected:
-    void paintEvent(QPaintEvent *p);
+	void mousePressEvent(QMouseEvent *event) override;
+    void paintEvent(QPaintEvent *p) override;
 	
-	void mousePressEvent(QMouseEvent *event);
 };
 
 

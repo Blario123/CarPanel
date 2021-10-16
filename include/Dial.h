@@ -19,13 +19,13 @@ class Dial : public QWidget {
 public:
 	explicit Dial(int dx = 0, int dy = 0, QWidget *parent = nullptr);
 	~Dial() override;
+	DialOuter *outer;
  
 private:
 	int x;
 	int y;
 	int radius = 550;
 	QGridLayout *layout;
-	DialOuter *outer;
 
 signals:
 

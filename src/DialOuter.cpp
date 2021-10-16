@@ -5,31 +5,51 @@
 #include <iostream>
 #include "include/DialOuter.h"
 
-DialOuter::DialOuter(double dx, double dy, QWidget *parent) : QWidget(parent) {
+double majAngle, minAngle;
+
+DialOuter::DialOuter(int dx, int dy, QWidget *parent) : QWidget(parent) {
 	this->x = dx;
 	this->y = dy;
+	center = new QPoint(dx + radius, dy + radius);
+	setContentsMargins(0, 0, 0 ,0);
 }
 
 DialOuter::~DialOuter() = default;
 
 void DialOuter::paintEvent(QPaintEvent *event) {
-	QPoint center(this->x + (radius/2), this->y + (radius/2));
-	
 	QPainter increments(this);
+	
+	increment.addEllipse(0, 0, 5, 5);
 	
 	increments.setRenderHint(QPainter::Antialiasing);
 
-	increments.setPen(QPen(QBrush(Qt::white), 5));
+	increments.setPen(QPen(QBrush(Qt::white), 3));
 	increments.setBrush(Qt::white);
-	increments.drawPoint(center);
+	increments.translate(center->x(), center->y());
+	increments.drawPath(increment);
+	increments.drawPath(increment);
 }
 
-void DialOuter::setMajorIncrements(int maj) {
-	
-	this->update();
+void DialOuter::setIncrements(int maj, int min) {
+	double dA = 360 - (startAngle - endAngle);
+	double dAMaj = dA/(maj-1);
+	double dAMin = dAMaj/(min+1);
+	for (int i = 0; i != maj; i++) {
+		majAngle = startAngle + (i * dAMaj);
+		increment.moveTo(outerRadius * sin(toDeg(majAngle)), outerRadius * -cos(toDeg(majAngle)));
+		increment.lineTo(majorRadius * sin(toDeg(majAngle)), majorRadius * -cos(toDeg(majAngle)));
+		if (i != maj-1) {
+			for (int j = 1; j < min + 1; j++) {
+				minAngle = majAngle + (j * dAMin);
+				increment.moveTo(outerRadius * sin(toDeg(minAngle)), outerRadius * -cos(toDeg(minAngle)));
+				increment.lineTo(minorRadius * sin(toDeg(minAngle)), minorRadius * -cos(toDeg(minAngle)));
+			}
+		}
+	}
+	this->repaint();
 }
 
-void DialOuter::setMinorIncrements(int min) {
-	
-	this->update();
+double DialOuter::toDeg(double angle) {
+	double rA = angle*(M_PI/180);
+	return rA;
 }

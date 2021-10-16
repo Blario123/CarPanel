@@ -6,6 +6,7 @@
 
 RevCounter::RevCounter(QWidget *parent) : QWidget(parent) {
 	dial = new Dial(1000, 100, this);
+	dial->outer->setIncrements(9, 3);
 	layout = new QGridLayout(this);
 	layout->setContentsMargins(0, 0 ,0 ,0);
 	layout->addWidget(dial);

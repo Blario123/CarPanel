@@ -4,6 +4,7 @@
 
 #include "../include/CarPanel.h"
 #include <QFile>
+#include <QThread>
 
 int indicatorState = 0;
 
@@ -23,9 +24,9 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	leftInd = new Indicator(500,150 - 64,0x101010,this);
 	rightInd = new Indicator(1036,150,0x101010,this, 180);
 
-    left = new Speedometer(this);
+    left = new RevCounter(this);
     center = new Display(this);
-    right = new RevCounter(this);
+    right = new Speedometer(this);
 
     if (setStyle() != 0) {
         qDebug() << "Error opening stylesheet.";
@@ -76,5 +77,4 @@ void CarPanel::mousePressEvent(QMouseEvent *event) {
 		rightInd->setColour(0x101010);
 		indicatorState = 0;
 	}
-	
 }

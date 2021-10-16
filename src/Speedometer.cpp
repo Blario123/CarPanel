@@ -6,6 +6,7 @@
 
 Speedometer::Speedometer(QWidget *parent) : QWidget(parent) {
 	dial = new Dial(50, 100, this);
+	dial->outer->setIncrements(9,3);
 	grid = new QGridLayout(this);
 	grid->setContentsMargins(0, 0, 0, 0);
 	grid->addWidget(dial);
