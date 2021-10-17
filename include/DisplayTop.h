@@ -18,15 +18,6 @@ public:
 	~DisplayTop() override;
 
 private:
-	QHBoxLayout *layout;
-	QSpacerItem *spacer;
-	QLabel *time;
-	int setStyle();
-signals:
-
-public slots:
-	void setTime(QDateTime dateTime);
-	
 };
 
 

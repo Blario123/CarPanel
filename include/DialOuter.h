@@ -5,37 +5,45 @@
 #ifndef CARPANEL_DIALOUTER_H
 #define CARPANEL_DIALOUTER_H
 
-
-#include <QWidget>
-#include <QPainter>
 #include <cmath>
-#include <QPoint>
+#include <iostream>
+#include <QColor>
+#include <QDebug>
+#include <QPainter>
 #include <QPainterPath>
+#include <QPoint>
+#include <QWidget>
+#include <QRawFont>
 
 class DialOuter : public QWidget{
 Q_OBJECT
 
 public:
-	explicit DialOuter(int dx, int dy, QWidget *parent = nullptr);
+	explicit DialOuter(int dx, int dy, QColor color = Qt::white, int size = 550, QWidget *parent = nullptr);
 	~DialOuter() override;
+	void setIncrements(int maj, int min);
+	void setText(int maj, QList<QString> list, int pt);
 	
 private:
 	QPoint *center;
-	QPainterPath increment;
+	QPainterPath *increment;
+	QPainterPath *incrementText;
+	QColor *color;
+	QRawFont *font;
+	int radius;
 	double x;
 	double y;
 	double startAngle = 220;
 	double endAngle = 140;
-	int radius = 550/2;
-	double outerRadius = 450.0/2;
-	double majorRadius = 410.0/2;
-	double minorRadius = 420.0/2;
+	double textRadius;
+	double outerRadius;
+	double majorRadius;
+	double minorRadius;
 	static double toDeg(double angle);
 	
 signals:
 
 public slots:
-	void setIncrements(int maj, int min);
 
 protected:
 	void paintEvent(QPaintEvent *event) override;

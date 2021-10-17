@@ -10,19 +10,20 @@
 #include <QWidget>
 
 class Speedometer : public QWidget {
-
   Q_OBJECT
-	
-
+  
 public:
 	explicit Speedometer(QWidget *parent = nullptr);
 	~Speedometer() override;
 	Dial *dial;
+	DialOuter *kmDial;
 
 private:
 	QGridLayout *grid;
+	
 public slots:
   void paintEvent(QPaintEvent *event);
+
 };
 
 #endif // CARPANEL_SPEEDOMETER_H

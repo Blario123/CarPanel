@@ -10,10 +10,7 @@ int indicatorState = 0;
 
 CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
     this->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
-    this->setGeometry(window()->width() / 2,
-                      window()->height() / 2,
-                      1600,
-                      800);
+    this->setGeometry(window()->width() / 2,window()->height() / 2,1600,800);
 
     setBackgroundRole(QPalette::Window);
 
@@ -21,16 +18,18 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setGeometry(QRect(0, 0, 1600, 800));
 	
-	leftInd = new Indicator(500,150 - 64,0x101010,this);
-	rightInd = new Indicator(1036,150,0x101010,this, 180);
+	leftInd = new Indicator(500,150 - 64,0x101010);
+	rightInd = new Indicator(1036,150,0x101010,180);
 
-    left = new RevCounter(this);
-    center = new Display(this);
-    right = new Speedometer(this);
+    left = new RevCounter();
+    center = new Display();
+    right = new Speedometer();
 
     if (setStyle() != 0) {
         qDebug() << "Error opening stylesheet.";
     }
+	
+	QFontDatabase::addApplicationFont("qrc:///resouces/CEROM.otf");
 
     layout->addWidget(center, 0, 0);
     layout->addWidget(left, 0, 0);

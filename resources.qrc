@@ -6,5 +6,6 @@
         <file>resources/outline.png</file>
         <file>resources/Main.qss</file>
         <file>resources/DisplayTop.qss</file>
+        <file>resources/CEROM.otf</file>
     </qresource>
 </RCC>

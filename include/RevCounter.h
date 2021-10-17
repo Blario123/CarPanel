@@ -8,10 +8,10 @@
 #include "Dial.h"
 #include <QGridLayout>
 #include <QWidget>
-class RevCounter : public QWidget {
-	
-	Q_OBJECT
+#include <QLabel>
 
+class RevCounter : public QWidget {
+	Q_OBJECT
 
 public:
 	explicit RevCounter(QWidget *parent = nullptr);
@@ -21,7 +21,7 @@ private:
 	Dial *dial;
 	QGridLayout *layout;
 public slots:
-	void paintEvent(QPaintEvent *event);
+	void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // CARPANEL_REVCOUNTER_H

@@ -11,7 +11,7 @@ class Indicator : public QWidget {
 	Q_OBJECT
 	
 public:
-	explicit Indicator(int ix, int iy, QColor icolour, QWidget *parent = nullptr, float dorientation = 0 );
+	explicit Indicator(int ix, int iy, QColor icolour, float dorientation = 0, QWidget *parent = nullptr);
 	~Indicator() override;
 
 public slots:
@@ -22,7 +22,7 @@ private:
 	int y;
 	int size = 64;
 	float orientation;
-	QColor colour;
+	QColor *colour;
 	void paintEvent(QPaintEvent *p) override;
 	
 };

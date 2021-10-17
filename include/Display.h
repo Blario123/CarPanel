@@ -14,7 +14,7 @@ class Display : public QWidget {
    Q_OBJECT
 
 public:
-    explicit Display(QWidget *parent = 0);
+    explicit Display(QWidget *parent = nullptr);
     ~Display() override;
 
 private:
@@ -24,7 +24,6 @@ private:
     QVBoxLayout *vLayout;
 	QHBoxLayout *hLayout;
     QLabel *label;
-    int setStyle();
 };
 
 #endif // CARPANEL_DISPLAY_H

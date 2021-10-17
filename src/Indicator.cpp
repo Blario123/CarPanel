@@ -6,11 +6,12 @@
 #include <QPainterPath>
 #include "../include/Indicator.h"
 
-Indicator::Indicator(int ix, int iy, QColor icolour, QWidget *parent, float iorientation) : QWidget(parent) {
+Indicator::Indicator(int ix, int iy, QColor icolour,float iorientation, QWidget *parent) : QWidget(parent) {
 	this->x = ix;
 	this->y = iy;
 	this->orientation = iorientation;
-	this->colour = icolour;
+	this->colour = new QColor(icolour);
+	
 }
 
 Indicator::~Indicator() = default;
@@ -18,7 +19,7 @@ Indicator::~Indicator() = default;
 void Indicator::paintEvent(QPaintEvent *p) {
 	QPolygon path;
 	
-	QPoint origin(this->x + (this->size / 2), this->y + (this->size / 2));
+	QPoint origin(x + (this->size / 2), y + (this->size / 2));
 	
 	path 	<< QPoint(origin.x(), origin.y() + this->size / 2)
 			<< QPoint(origin.x() + 30, origin.y())
@@ -36,10 +37,10 @@ void Indicator::paintEvent(QPaintEvent *p) {
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.drawPolygon(path);
-	painter.fillPath(indicator, this->colour);
+	painter.fillPath(indicator, *this->colour);
 }
 
 void Indicator::setColour(QColor indColour) {
-	this->colour = indColour;
+	*this->colour = indColour;
 	this->update();
 }
