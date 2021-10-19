@@ -5,15 +5,17 @@
 #include "include/DialOuter.h"
 
 double majAngle, minAngle, dA, dAMaj, dAMin, textAngle;
+double majLoop;
+bool lastLine, doLastLine;
 
-DialOuter::DialOuter(int dx, int dy, QColor color, int size, QWidget *parent) : QWidget(parent) {
+DialOuter::DialOuter(int dx, int dy, int majW, int minW, QColor color, int size, QWidget *parent) : QWidget(parent) {
 	this->radius = size/2;
 	this->x = dx;
 	this->y = dy;
 	this->outerRadius = this->radius - 50;
 	this->textRadius = this->outerRadius + 10;
-	this->majorRadius = this->outerRadius - 30;
-	this->minorRadius = this->outerRadius - 15;
+	this->majorRadius = this->outerRadius - majW;
+	this->minorRadius = this->outerRadius - minW;
 	this->color = new QColor(color);
 	this->center = new QPoint(dx + this->radius, dy + this->radius);
 	this->increment = new QPainterPath();
@@ -37,17 +39,31 @@ void DialOuter::paintEvent(QPaintEvent *event) {
 	increments.drawPath(*incrementText);
 }
 
-void DialOuter::setIncrements(int maj, int min) {
+void DialOuter::setIncrements(double maj, int min) {
+	if(fmod(maj, 1) != 0) {
+		majLoop = maj - fmod(maj, 1);
+		doLastLine = false;
+	} else {
+		majLoop = maj;
+		doLastLine = true;
+	}
 	dA = 360 - (startAngle - endAngle);
 	dAMaj = dA/(maj-1);
 	dAMin = dAMaj/(min+1);
-	for (int i = 0; i != maj; i++) {
+	for (int i = 0; i < majLoop; i++) {
 		majAngle = startAngle + (i * dAMaj);
 		increment->moveTo(outerRadius * sin(toDeg(majAngle)), outerRadius * -cos(toDeg(majAngle)));
 		increment->lineTo(majorRadius * sin(toDeg(majAngle)), majorRadius * -cos(toDeg(majAngle)));
-		if (i != maj-1) {
-			for (int j = 1; j < min + 1; j++) {
+		for (int j = 1; j < min + 1; j++) {
+			if(i != majLoop - 1) {
 				minAngle = majAngle + (j * dAMin);
+				increment->moveTo(outerRadius * sin(toDeg(minAngle)), outerRadius * -cos(toDeg(minAngle)));
+				increment->lineTo(minorRadius * sin(toDeg(minAngle)), minorRadius * -cos(toDeg(minAngle)));
+			}
+		}
+		if(!doLastLine) {
+			for (int j = 0; j < 3; ++j) {
+				minAngle = majAngle + (j*dAMin);
 				increment->moveTo(outerRadius * sin(toDeg(minAngle)), outerRadius * -cos(toDeg(minAngle)));
 				increment->lineTo(minorRadius * sin(toDeg(minAngle)), minorRadius * -cos(toDeg(minAngle)));
 			}

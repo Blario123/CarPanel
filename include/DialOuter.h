@@ -19,9 +19,9 @@ class DialOuter : public QWidget{
 Q_OBJECT
 
 public:
-	explicit DialOuter(int dx, int dy, QColor color = Qt::white, int size = 550, QWidget *parent = nullptr);
+	explicit DialOuter(int dx, int dy, int majW, int minW, QColor color = Qt::white, int size = 550, QWidget *parent = nullptr);
 	~DialOuter() override;
-	void setIncrements(int maj, int min);
+	void setIncrements(double maj, int min);
 	void setText(int maj, QList<QString> list, int pt);
 	
 private:

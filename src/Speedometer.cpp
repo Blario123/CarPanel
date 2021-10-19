@@ -5,10 +5,10 @@
 #include "../include/Speedometer.h"
 
 Speedometer::Speedometer(QWidget *parent) : QWidget(parent) {
-	dial = new Dial(1000, 100, this);
-	kmDial = new DialOuter(1075, 175, 0x666666, 400);
-	dial->outer->setIncrements(9,3);
-	dial->outer->setText(9, {"0", "20", "40", "60", "80", "100", "120", "140", "160"}, 15);
+	dial = new Dial(20, 10, 1000, 100, this);
+	kmDial = new DialOuter(1050, 150, 20, 10, 0x666666, 450);
+	dial->outer->setIncrements(8.5,3);
+	dial->outer->setText(9, {"0", "20", "40", "60", "80", "100", "120", "140"}, 15);
 	kmDial->setIncrements(13, 3);
 	kmDial->setText(13, {"0", "20", "40", "60", "80", "100", "120", "140", "160", "180", "200", "220", "240"}, 12);
 	grid = new QGridLayout(this);

@@ -17,7 +17,7 @@ class Dial : public QWidget {
   Q_OBJECT
 
 public:
-	explicit Dial(int dx = 0, int dy = 0, QWidget *parent = nullptr);
+	explicit Dial(int majW, int minW, int dx = 0, int dy = 0, QWidget *parent = nullptr);
 	~Dial() override;
 	DialOuter *outer;
  

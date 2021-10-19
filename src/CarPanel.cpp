@@ -4,7 +4,6 @@
 
 #include "../include/CarPanel.h"
 #include <QFile>
-#include <QThread>
 
 int indicatorState = 0;
 
@@ -24,7 +23,7 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
     left = new RevCounter();
     center = new Display();
     right = new Speedometer();
-
+	
     if (setStyle() != 0) {
         qDebug() << "Error opening stylesheet.";
     }

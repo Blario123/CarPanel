@@ -4,12 +4,12 @@
 
 #include "../include/Dial.h"
 
-Dial::Dial(int dx, int dy, QWidget *parent) : QWidget(parent) {
+Dial::Dial(int majW, int minW, int dx, int dy, QWidget *parent) : QWidget(parent) {
 	this->x = dx;
 	this->y = dy;
 	
 	layout = new QGridLayout(this);
-	outer = new DialOuter(dx, dy);
+	outer = new DialOuter(dx, dy, majW, minW);
 	
 	layout->setContentsMargins(0, 0, 0, 0);
 	
