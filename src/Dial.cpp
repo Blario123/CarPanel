@@ -2,36 +2,35 @@
 // Created by Blair on 02/10/2021.
 //
 
+#include <include/DialNeedle.h>
 #include "../include/Dial.h"
 
-Dial::Dial(int majW, int minW, int dx, int dy, QWidget *parent) : QWidget(parent) {
-	this->x = dx;
-	this->y = dy;
-	
-	layout = new QGridLayout(this);
-	outer = new DialOuter(dx, dy, majW, minW);
-	
-	layout->setContentsMargins(0, 0, 0, 0);
-	
-	layout->addWidget(outer);
-	
-	setLayout(layout);
+Dial::Dial(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject() {
+//	setPen(QPen(QBrush(0xC0C0C0), 10));
+//	setBrush(QColor(Qt::black));
+outer = new DialOuter(this);
+needle = new DialNeedle(this);
 }
 
-Dial::~Dial() {
-	delete layout;
-	delete outer;
-};
-
-void Dial::paintEvent(QPaintEvent *event) {
-	QPainter dialOuter(this);
-	
-	dialOuter.setPen(QPen(QBrush(0xC0C0C0), 10));
-	dialOuter.setBrush(QColor(Qt::black));
-	dialOuter.setRenderHint(QPainter::Antialiasing);
-	
-	QPainterPath dialOutline;
-	dialOutline.addEllipse(this->x, this->y, this->radius, this->radius);
-	dialOuter.drawPath(dialOutline);
+void Dial::setPosition(int x, int y) {
+	this->mX = x;
+	this->mY = y;
+	this->update();
 }
 
+QRectF Dial::boundingRect() const {
+	return QRectF(0, 0, 100, 100);
+}
+
+QPainterPath Dial::shape() const {
+	QPainterPath path;
+	path.addPath(outer->shape());
+	path.addPath(needle->shape());
+	path.addEllipse(mX, mY, mRadius, mRadius);
+	return path;
+}
+
+void Dial::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+}
+
+Dial::~Dial() = default;

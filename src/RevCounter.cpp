@@ -4,17 +4,25 @@
 
 #include "../include/RevCounter.h"
 
-RevCounter::RevCounter(QWidget *parent) : QWidget(parent) {
-	dial = new Dial(12, 6, 50, 100, this);
-	dial->outer->setIncrements(9, 3);
-	dial->outer->setText(9, {"0", "10", "20", "30", "40", "50", "60", "70", "80"}, 15);
-	layout = new QGridLayout(this);
-	layout->setContentsMargins(0, 0 ,0 ,0);
-	layout->addWidget(dial);
-	setLayout(layout);
+RevCounter::RevCounter(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
+	dial = new Dial(this);
+//	dial->outer->setIncrements(9, 3);
+//	dial->outer->setText(9, {"0", "10", "20", "30", "40", "50", "60", "70", "80"}, 15);
+}
+
+QRectF RevCounter::boundingRect() const {
+	return QRectF();
+}
+
+QPainterPath RevCounter::shape() const {
+	QPainterPath path;
+	path.addPath(dial->shape());
+	return path;
+}
+
+void RevCounter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+	painter->setPen(Qt::white);
+	painter->drawPath(shape());
 }
 
 RevCounter::~RevCounter() = default;
-
-void RevCounter::paintEvent(QPaintEvent *event) {
-}

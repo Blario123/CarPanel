@@ -4,13 +4,32 @@
 
 #include "../include/CarPanel.h"
 #include <QFile>
+#include <QTimer>
 
 int indicatorState = 0;
+
+void setNoViewScrollbars(QGraphicsView *pView);
 
 CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
     this->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
     this->setGeometry(window()->width() / 2,window()->height() / 2,1600,800);
 
+	auto *scene = new QGraphicsScene();
+	auto *view = new QGraphicsView();
+    auto *left = new RevCounter();
+    auto *right = new Speedometer();
+
+//	right: dial = new Dial(20, 10, 1000, 100, this);
+//  right: kmDial = new DialOuter(1050, 150, 20, 10, 0x666666, 450);
+	
+	right->dial->setPosition(1000, 100);
+	right->kmDial->setPosition(1050, 150);
+	
+	left->dial->setPosition(50, 100);
+	
+	setNoViewScrollbars(view);
+	scene->setSceneRect(0, 0, 1600, 800);
+	
     setBackgroundRole(QPalette::Window);
 
     layout = new QGridLayout(this);
@@ -20,9 +39,17 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	leftInd = new Indicator(500,150 - 64,0x101010);
 	rightInd = new Indicator(1036,150,0x101010,180);
 
-    left = new RevCounter();
     center = new Display();
-    right = new Speedometer();
+	
+	scene->addItem(left);
+	scene->addItem(right);
+	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
+	view->setScene(scene);
+	view->setRenderHint(QPainter::Antialiasing);
+	view->setCacheMode(QGraphicsView::CacheBackground);
+	view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+	view->setDragMode(QGraphicsView::NoDrag);
+	view->setStyleSheet("background: transparent");
 	
     if (setStyle() != 0) {
         qDebug() << "Error opening stylesheet.";
@@ -31,10 +58,9 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	QFontDatabase::addApplicationFont("qrc:///resouces/CEROM.otf");
 
     layout->addWidget(center, 0, 0);
-    layout->addWidget(left, 0, 0);
-    layout->addWidget(right, 0, 0);
 	layout->addWidget(leftInd, 0, 0);
 	layout->addWidget(rightInd, 0, 0);
+	layout->addWidget(view, 0, 0);
 
     setLayout(layout);
 }
@@ -51,8 +77,6 @@ int CarPanel::setStyle() {
 
 CarPanel::~CarPanel() {
     delete center;
-    delete left;
-    delete right;
     delete layout;
 	delete leftInd;
 	delete rightInd;
@@ -62,7 +86,7 @@ void CarPanel::paintEvent(QPaintEvent *p) {
   pixmap.load(":/resources/outline.png");
   QPainter paint(this);
   paint.drawPixmap(0, 0, pixmap);
-  QWidget::paintEvent(p);
+//  QWidget::paintEvent(p);
 }
 
 void CarPanel::mousePressEvent(QMouseEvent *event) {
@@ -75,4 +99,9 @@ void CarPanel::mousePressEvent(QMouseEvent *event) {
 		rightInd->setColour(0x101010);
 		indicatorState = 0;
 	}
+}
+
+void setNoViewScrollbars(QGraphicsView *pView) {
+	pView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	pView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }

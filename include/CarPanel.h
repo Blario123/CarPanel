@@ -5,7 +5,7 @@
 #ifndef CARPANEL_CARPANEL_H
 #define CARPANEL_CARPANEL_H
 
-#include <QWidget>
+#include <QGraphicsView>
 #include "Display.h"
 #include "RevCounter.h"
 #include "Speedometer.h"
@@ -26,9 +26,7 @@ private:
 	Indicator *rightInd;
 
     QGridLayout *layout;
-    RevCounter *left;
     Display *center;
-    Speedometer *right;
 
 signals:
 

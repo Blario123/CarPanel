@@ -14,40 +14,41 @@
 #include <QPoint>
 #include <QWidget>
 #include <QRawFont>
+#include <QGraphicsPathItem>
 
-class DialOuter : public QWidget{
+class DialOuter : public QObject, public QGraphicsItem {
 Q_OBJECT
-
+Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DialOuter(int dx, int dy, int majW, int minW, QColor color = Qt::white, int size = 550, QWidget *parent = nullptr);
+	explicit DialOuter(QGraphicsItem *parent = nullptr);
 	~DialOuter() override;
 	void setIncrements(double maj, int min);
 	void setText(int maj, QList<QString> list, int pt);
+	QRectF boundingRect() const override;
+	QPainterPath shape() const override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+	void setCenter(QPointF center);
+	void setRadius(int radius);
+	void setOuterRadius(int radius);
+	void setInnerRadius(int radius);
+	void setTextRadius(int radius);
+	void setX(int x);
+	void setY(int y);
+	void setPosition(int x, int y);
 	
 private:
-	QPoint *center;
 	QPainterPath *increment;
 	QPainterPath *incrementText;
-	QColor *color;
-	QRawFont *font;
-	int radius;
-	double x;
-	double y;
+	double dx;
+	double dy;
 	double startAngle = 220;
 	double endAngle = 140;
-	double textRadius;
-	double outerRadius;
-	double majorRadius;
-	double minorRadius;
-	static double toDeg(double angle);
-	
-signals:
-
-public slots:
-
-protected:
-	void paintEvent(QPaintEvent *event) override;
-	
+	qreal mX;
+	qreal mY;
+	int mRadius;
+	double mTextRadius;
+	double mOuterRadius;
+	double mMinorRadius;
 };
 
 

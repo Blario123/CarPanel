@@ -32,7 +32,7 @@ set(source_gui
         src/Indicator.cpp
         src/DisplayTop.cpp
         src/DialOuter.cpp
-        )
+        src/DialNeedle.cpp)
 
 set(header_gui
         include/CarPanel.h
@@ -43,7 +43,7 @@ set(header_gui
         include/Indicator.h
         include/DisplayTop.h
         include/DialOuter.h
-        )
+        include/DialNeedle.h)
 
 add_executable(CarPanel ${source_gui} ${header_gui})
 

@@ -9,20 +9,22 @@
 #include <QGridLayout>
 #include <QWidget>
 
-class Speedometer : public QWidget {
-  Q_OBJECT
-  
+class Speedometer : public QObject, public QGraphicsItem {
+Q_OBJECT
+Q_INTERFACES(QGraphicsItem)
 public:
-	explicit Speedometer(QWidget *parent = nullptr);
+	explicit Speedometer(QGraphicsItem *parent = nullptr);
 	~Speedometer() override;
 	Dial *dial;
 	DialOuter *kmDial;
+	QRectF boundingRect() const override;
+	QPainterPath shape() const override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 private:
 	QGridLayout *grid;
 	
 public slots:
-  void paintEvent(QPaintEvent *event);
 
 };
 

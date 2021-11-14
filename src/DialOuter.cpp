@@ -4,43 +4,19 @@
 
 #include "include/DialOuter.h"
 
-double majAngle, minAngle, dA, dAMaj, dAMin, textAngle;
+double majAngle, minAngle, dA, dAMaj, dAMin;
 double majLoop;
-bool lastLine, doLastLine;
+bool doLastLine;
 
-DialOuter::DialOuter(int dx, int dy, int majW, int minW, QColor color, int size, QWidget *parent) : QWidget(parent) {
-	this->radius = size/2;
-	this->x = dx;
-	this->y = dy;
-	this->outerRadius = this->radius - 50;
-	this->textRadius = this->outerRadius + 10;
-	this->majorRadius = this->outerRadius - majW;
-	this->minorRadius = this->outerRadius - minW;
-	this->color = new QColor(color);
-	this->center = new QPoint(dx + this->radius, dy + this->radius);
-	this->increment = new QPainterPath();
-	this->incrementText = new QPainterPath();
-	font = new QRawFont(QString(":/resources/CEROM.otf"), 5);
-	setContentsMargins(0, 0, 0 ,0);
+DialOuter::DialOuter(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
+	increment = new QPainterPath();
+	incrementText = new QPainterPath();
 }
 
 DialOuter::~DialOuter() = default;
 
-void DialOuter::paintEvent(QPaintEvent *event) {
-	QPainter increments(this);
-	
-	increments.setRenderHint(QPainter::Antialiasing);
-
-	increments.translate(center->x(), center->y());
-	increments.setPen(QPen(QBrush(*color), 3));
-	increments.setBrush(*color);
-	increments.drawPath(*increment);
-	increments.setPen(QPen(QBrush(*color), 1));
-	increments.drawPath(*incrementText);
-}
-
 void DialOuter::setIncrements(double maj, int min) {
-	if(fmod(maj, 1) != 0) {
+	if (fmod(maj, 1) != 0) {
 		majLoop = maj - fmod(maj, 1);
 		doLastLine = false;
 	} else {
@@ -48,28 +24,34 @@ void DialOuter::setIncrements(double maj, int min) {
 		doLastLine = true;
 	}
 	dA = 360 - (startAngle - endAngle);
-	dAMaj = dA/(maj-1);
-	dAMin = dAMaj/(min+1);
+	dAMaj = dA / (maj - 1);
+	dAMin = dAMaj / (min + 1);
 	for (int i = 0; i < majLoop; i++) {
 		majAngle = startAngle + (i * dAMaj);
-		increment->moveTo(outerRadius * sin(toDeg(majAngle)), outerRadius * -cos(toDeg(majAngle)));
-		increment->lineTo(majorRadius * sin(toDeg(majAngle)), majorRadius * -cos(toDeg(majAngle)));
+		increment->moveTo(mOuterRadius * sin(qDegreesToRadians(majAngle)),
+						  mOuterRadius * -cos(qDegreesToRadians(majAngle)));
+		increment->lineTo(mRadius * sin(qDegreesToRadians(majAngle)),
+						  mRadius * -cos(qDegreesToRadians(majAngle)));
 		for (int j = 1; j < min + 1; j++) {
-			if(i != majLoop - 1) {
+			if (i != majLoop - 1) {
 				minAngle = majAngle + (j * dAMin);
-				increment->moveTo(outerRadius * sin(toDeg(minAngle)), outerRadius * -cos(toDeg(minAngle)));
-				increment->lineTo(minorRadius * sin(toDeg(minAngle)), minorRadius * -cos(toDeg(minAngle)));
+				increment->moveTo(mOuterRadius * sin(qDegreesToRadians(minAngle)),
+								  mOuterRadius * -cos(qDegreesToRadians(minAngle)));
+				increment->lineTo(mMinorRadius * sin(qDegreesToRadians(minAngle)),
+								  mMinorRadius * -cos(qDegreesToRadians(minAngle)));
 			}
 		}
-		if(!doLastLine) {
+		if (!doLastLine) {
 			for (int j = 0; j < 3; ++j) {
-				minAngle = majAngle + (j*dAMin);
-				increment->moveTo(outerRadius * sin(toDeg(minAngle)), outerRadius * -cos(toDeg(minAngle)));
-				increment->lineTo(minorRadius * sin(toDeg(minAngle)), minorRadius * -cos(toDeg(minAngle)));
+				minAngle = majAngle + (j * dAMin);
+				increment->moveTo(mOuterRadius * sin(qDegreesToRadians(minAngle)),
+								  mOuterRadius * -cos(qDegreesToRadians(minAngle)));
+				increment->lineTo(mMinorRadius * sin(qDegreesToRadians(minAngle)),
+								  mMinorRadius * -cos(qDegreesToRadians(minAngle)));
 			}
 		}
 	}
-	this->repaint();
+	this->update();
 }
 
 void DialOuter::setText(int maj, QList<QString> list, int pt) {
@@ -79,13 +61,16 @@ void DialOuter::setText(int maj, QList<QString> list, int pt) {
 	
 	for (int i = 0; i < list.size(); i++) {
 		majAngle = startAngle + (i * dAMaj);
-		tempPoint = QPoint(static_cast <int> (textRadius * sin(toDeg(majAngle))),static_cast <int> (textRadius * -cos(toDeg(majAngle))));
+		tempPoint = QPoint(static_cast <int> (mTextRadius * sin(qDegreesToRadians(majAngle))),
+						   static_cast <int> (mTextRadius * -cos(qDegreesToRadians(majAngle))));
 		tempPath.addText(tempPoint, QFont("CEROM", pt), list[i]);
-		tempPath.translate(-tempPath.boundingRect().width()/2,0);
-		tempPath = QTransform().translate(textRadius * sin(toDeg(majAngle)),textRadius * -cos(toDeg(majAngle)))
-							   .rotate(majAngle)
-							   .translate(textRadius * -sin(toDeg(majAngle)), textRadius * cos(toDeg(majAngle)))
-							   .map(tempPath);
+		tempPath.translate(-tempPath.boundingRect().width() / 2, 0);
+		tempPath = QTransform().translate(mTextRadius * sin(qDegreesToRadians(majAngle)),
+										  mTextRadius * -cos(qDegreesToRadians(majAngle)))
+				.rotate(majAngle)
+				.translate(mTextRadius * -sin(qDegreesToRadians(majAngle)),
+						   mTextRadius * cos(qDegreesToRadians(majAngle)))
+				.map(tempPath);
 		pathList << tempPath;
 		tempPath.clear();
 	}
@@ -95,10 +80,65 @@ void DialOuter::setText(int maj, QList<QString> list, int pt) {
 			incrementText->addPath(pathList[i]);
 		}
 	}
-	this->repaint();
+	pathList.clear();
+//	incrementText->translate(mX + (mRadius/2), mY + (mRadius/2));
+	this->update();
 }
 
-double DialOuter::toDeg(double angle) {
-	double rA = angle*(M_PI/180);
-	return rA;
+void DialOuter::setRadius(int radius) {
+	this->mRadius = radius;
+	this->update();
 }
+
+void DialOuter::setOuterRadius(int radius) {
+	this->mOuterRadius = radius;
+	this->update();
+}
+
+void DialOuter::setInnerRadius(int radius) {
+	this->mMinorRadius = radius;
+	this->update();
+}
+
+void DialOuter::setTextRadius(int radius) {
+	this->mTextRadius = radius;
+	this->update();
+}
+
+void DialOuter::setX(int x) {
+	this->mX = x;
+	this->update();
+}
+
+void DialOuter::setY(int y) {
+	this->mY = y;
+	this->update();
+}
+
+void DialOuter::setCenter(QPointF center) {
+	this->mX = center.x();
+	this->mY = center.y();
+}
+
+void DialOuter::setPosition(int x, int y) {
+	this->mX = x;
+	this->mY = y;
+	this->update();
+}
+
+QRectF DialOuter::boundingRect() const {
+	return QRectF();
+}
+
+QPainterPath DialOuter::shape() const {
+	QPainterPath path;
+	increment->translate(mX, mY);
+	path.addPath(*increment);
+	path.addPath(*incrementText);
+	return path;
+}
+
+void DialOuter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
+}
+

@@ -7,21 +7,22 @@
 
 #include "Dial.h"
 #include <QGridLayout>
-#include <QWidget>
-#include <QLabel>
+#include <QObject>
 
-class RevCounter : public QWidget {
-	Q_OBJECT
-
+class RevCounter : public QObject, public QGraphicsItem {
+Q_OBJECT
+Q_INTERFACES(QGraphicsItem)
 public:
-	explicit RevCounter(QWidget *parent = nullptr);
+	explicit RevCounter(QGraphicsItem *parent = nullptr);
 	~RevCounter() override;
+	QRectF boundingRect() const override;
+	QPainterPath shape() const override;
+	
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+	Dial *dial;
 
 private:
-	Dial *dial;
-	QGridLayout *layout;
 public slots:
-	void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // CARPANEL_REVCOUNTER_H

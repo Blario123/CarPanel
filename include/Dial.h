@@ -8,31 +8,34 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPen>
-#include <QWidget>
-
-#include "include/DialOuter.h"
+#include <QRectF>
 #include <QGridLayout>
+#include <QGraphicsPathItem>
 
-class Dial : public QWidget {
-  Q_OBJECT
+#include "include/DialNeedle.h"
+#include "include/DialOuter.h"
 
+class Dial : public QObject, public QGraphicsItem {
+Q_OBJECT
+Q_INTERFACES(QGraphicsItem)
 public:
-	explicit Dial(int majW, int minW, int dx = 0, int dy = 0, QWidget *parent = nullptr);
+	explicit Dial(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
 	~Dial() override;
 	DialOuter *outer;
- 
+	DialNeedle *needle;
+	QRectF boundingRect() const override;
+	QPainterPath shape() const override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+	void setPosition(int x, int y);
+
 private:
-	int x;
-	int y;
-	int radius = 550;
-	QGridLayout *layout;
-
-signals:
-
-public slots:
+	int mX;
+	int mY;
+	int mRadius = 550;
+	int mAngle = -140;
+	QPointF *center;
 
 protected:
-  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // CARPANEL_DIAL_H

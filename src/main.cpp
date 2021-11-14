@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]) {
     Q_INIT_RESOURCE(resources);
     QApplication a(argc, argv);
-    CarPanel w;
-    w.show();
+    CarPanel cp;
+    cp.show();
     return QApplication::exec();
 }
