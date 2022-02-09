@@ -6,7 +6,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 if(WIN32)
-    set(CMAKE_PREFIX_PATH "C:/Qt/6.1.3/mingw81_64/lib/cmake")
+    set(CMAKE_PREFIX_PATH "C:/Qt/6.2.2/mingw_64/lib/cmake")
 else()
 
 endif(WIN32)
@@ -25,6 +25,7 @@ set(source_gui
         ${resources}
         src/main.cpp
         src/CarPanel.cpp
+        src/Control.cpp
         src/Display.cpp
         src/Speedometer.cpp
         src/RevCounter.cpp
@@ -36,6 +37,7 @@ set(source_gui
 
 set(header_gui
         include/CarPanel.h
+        include/Control.h
         include/Display.h
         include/Speedometer.h
         include/RevCounter.h
@@ -46,7 +48,6 @@ set(header_gui
         include/DialNeedle.h)
 
 add_executable(CarPanel ${source_gui} ${header_gui})
-
 
 target_link_libraries(CarPanel
         Qt::Core

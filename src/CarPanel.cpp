@@ -81,6 +81,7 @@ CarPanel::~CarPanel() {
 	delete leftInd;
 	delete rightInd;
 }
+
 void CarPanel::paintEvent(QPaintEvent *p) {
   QPixmap pixmap;
   pixmap.load(":/resources/outline.png");
