@@ -1,5 +1,5 @@
-#ifndef CONTROL_H
-#define CONTROL_H
+#ifndef CARPANEL_CONTROL_H
+#define CARPANEL_CONTROL_H
 
 #include <QDialog>
 #include <QLabel>
@@ -16,6 +16,7 @@ private slots:
 	void setSpeed(int value);
 	void setRev(int value);
 signals:
+	void valueChanged(qreal);
 private:
 	QGridLayout *gridBox;
 	QSlider *speedSlider;
@@ -26,4 +27,4 @@ private:
 	QLabel *revLabel;
 };
 
-#endif //CONTROL_H
+#endif //CARPANEL_CONTROL_H

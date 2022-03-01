@@ -16,7 +16,6 @@ public:
 	explicit Speedometer(QGraphicsItem *parent = nullptr);
 	~Speedometer() override;
 	Dial *dial;
-	DialOuter *kmDial;
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;

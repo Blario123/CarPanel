@@ -10,6 +10,7 @@
 #include "RevCounter.h"
 #include "Speedometer.h"
 #include "Indicator.h"
+#include "Background.h"
 
 class CarPanel : public QWidget {
     Q_OBJECT
@@ -18,6 +19,7 @@ public:
     explicit CarPanel(QWidget *parent = nullptr);
 
     ~CarPanel() override;
+	RevCounter *left;
 
 private:
     int setStyle();
@@ -29,12 +31,12 @@ private:
     Display *center;
 
 signals:
-
+	void valueChanged(qreal);
 public slots:
-
+	void setSpeed(qreal);
+	void setRev(qreal);
 protected:
 	void mousePressEvent(QMouseEvent *event) override;
-    void paintEvent(QPaintEvent *p) override;
 	
 };
 

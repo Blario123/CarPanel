@@ -39,8 +39,10 @@ Control::~Control() = default;
 
 void Control::setSpeed(int value) {
 	speedLineEdit->setText(QString::number((qreal) value/100));
+	emit valueChanged(value);
 }
 
 void Control::setRev(int value) {
 	revLineEdit->setText(QString::number((qreal) value/100));
+	emit valueChanged(value);
 }

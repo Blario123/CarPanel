@@ -7,13 +7,16 @@
 
 #include <QPainter>
 #include <QPainterPath>
+#include <QPolygon>
 #include <QPen>
 #include <QRectF>
 #include <QGridLayout>
-#include <QGraphicsPathItem>
+#include <QGraphicsItem>
 
-#include "include/DialNeedle.h"
-#include "include/DialOuter.h"
+class DialOuter;
+class DialNeedle;
+class DialIncrements;
+class DialText;
 
 class Dial : public QObject, public QGraphicsItem {
 Q_OBJECT
@@ -21,21 +24,89 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit Dial(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
 	~Dial() override;
-	DialOuter *outer;
-	DialNeedle *needle;
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-	void setPosition(int x, int y);
+	void setPosition(qreal, qreal);
+	void setIncrements(qreal, qreal);
+	void setRev(qreal);
+	DialOuter *outer;
+	DialNeedle *needle;
+	DialIncrements *increments;
+signals:
+	void valueChanged(qreal);
+	void positionChanged(qreal, qreal);
+	void incrementsChanged(qreal, qreal);
+private:
+	int mx;
+	int my;
+};
+
+class DialOuter : public QObject, public QGraphicsItem {
+Q_OBJECT
+Q_INTERFACES(QGraphicsItem)
+public:
+	explicit DialOuter(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
+	~DialOuter() override;
+	QRectF boundingRect() const override;
+	QPainterPath shape() const override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+	void setRadius(qreal r);
+private:
+	qreal radius = 275;
+	qreal mx;
+	qreal my;
+public slots:
+	void setPosition(qreal, qreal);
+};
+
+class DialText : public QObject, public QGraphicsItem {
+Q_OBJECT
+Q_INTERFACES(QGraphicsItem)
+public:
+	explicit DialText(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
+	~DialText() override;
+	QRectF boundingRect() const override;
+	QPainterPath shape() const override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+};
+
+class DialIncrements : public QObject, public QGraphicsItem {
+Q_OBJECT
+Q_INTERFACES(QGraphicsItem)
+public:
+	explicit DialIncrements(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
+	~DialIncrements() override;
+	QRectF boundingRect() const override;
+	QPainterPath shape() const override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+private:
+	qreal mx;
+	qreal my;
+public slots:
+	void setPosition(qreal, qreal);
+	void setIncrements(qreal, qreal);
+};
+
+class DialNeedle : public QObject, public QGraphicsItem {
+Q_OBJECT
+Q_INTERFACES(QGraphicsItem)
+public:
+	explicit DialNeedle(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
+	~DialNeedle() override;
+	QRectF boundingRect() const override;
+	QPainterPath shape() const override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 private:
-	int mX;
-	int mY;
-	int mRadius = 550;
-	int mAngle = -140;
-	QPointF *center;
-
-protected:
+	qreal mx;
+	qreal my;
+	qreal mradius = 225;
+	qreal mangle = 0;
+public slots:
+	void setPosition(qreal, qreal);
+	void setAngle(qreal);
 };
 
 #endif // CARPANEL_DIAL_H

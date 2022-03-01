@@ -23,6 +23,7 @@ public:
 
 private:
 public slots:
+	void setRev(qreal);
 };
 
 #endif // CARPANEL_REVCOUNTER_H
