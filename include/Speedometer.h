@@ -15,16 +15,15 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit Speedometer(QGraphicsItem *parent = nullptr);
 	~Speedometer() override;
-	Dial *dial;
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
+	
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+	Dial *dial;
 
 private:
-	QGridLayout *grid;
-	
 public slots:
-
+	void setSpeed(qreal);
 };
 
 #endif // CARPANEL_SPEEDOMETER_H

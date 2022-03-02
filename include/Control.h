@@ -7,24 +7,28 @@
 #include <QLineEdit>
 #include <QGridLayout>
 
-class Control : public QDialog {
+class Control : public QWidget {
 Q_OBJECT
 public:
 	explicit Control(QWidget *parent = nullptr);
 	~Control() override;
+	QSlider *speedSlider;
+	QSlider *revSlider;
 private slots:
 	void setSpeed(int value);
 	void setRev(int value);
 signals:
-	void valueChanged(qreal);
+	void speedChanged(qreal);
+	void revChanged(qreal);
+	void closeSignal();
 private:
 	QGridLayout *gridBox;
-	QSlider *speedSlider;
-	QSlider *revSlider;
 	QLineEdit *speedLineEdit;
 	QLineEdit *revLineEdit;
 	QLabel *speedLabel;
 	QLabel *revLabel;
+protected:
+	void closeEvent(QCloseEvent *event);
 };
 
 #endif //CARPANEL_CONTROL_H

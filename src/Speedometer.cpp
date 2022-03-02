@@ -6,6 +6,7 @@
 
 Speedometer::Speedometer(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
 	dial = new Dial(this);
+	dial->setPosition(1275, 375);
 	
 //	dial->outer->setTextRadius(250);
 //
@@ -28,15 +29,13 @@ QRectF Speedometer::boundingRect() const {
 }
 
 QPainterPath Speedometer::shape() const {
-	QPainterPath path;
-	path.addPath(dial->shape());
-	return path;
+	return QGraphicsItem::shape();
 }
 
 void Speedometer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-	painter->setPen(Qt::white);
-	painter->drawPath(shape());
-	painter->setPen(0x666666);
-//	painter->drawPath(kmDial->shape());
+
 }
 
+void Speedometer::setSpeed(qreal value) {
+	dial->setAngle(value);
+}

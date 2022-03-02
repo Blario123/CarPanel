@@ -1,6 +1,6 @@
 #include "include/Control.h"
 
-Control::Control(QWidget *parent) : QDialog(parent),
+Control::Control(QWidget *parent) : QWidget(parent),
 									gridBox(new QGridLayout),
 									speedLineEdit(new QLineEdit),
 									revLineEdit(new QLineEdit),
@@ -8,8 +8,6 @@ Control::Control(QWidget *parent) : QDialog(parent),
 									revLabel(new QLabel(tr("Rev/m"))),
 									speedSlider(new QSlider),
 									revSlider(new QSlider) {
-	setModal(false);
-	
 	speedLineEdit->setText(QString::number(speedSlider->value()));
 	revLineEdit->setText(QString::number(revSlider->value()));
 	
@@ -39,10 +37,14 @@ Control::~Control() = default;
 
 void Control::setSpeed(int value) {
 	speedLineEdit->setText(QString::number((qreal) value/100));
-	emit valueChanged(value);
+	emit speedChanged(value);
 }
 
 void Control::setRev(int value) {
 	revLineEdit->setText(QString::number((qreal) value/100));
-	emit valueChanged(value);
+	emit revChanged(value);
+}
+
+void Control::closeEvent(QCloseEvent *event) {
+	emit closeSignal();
 }

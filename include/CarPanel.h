@@ -6,6 +6,7 @@
 #define CARPANEL_CARPANEL_H
 
 #include <QGraphicsView>
+#include "Control.h"
 #include "Display.h"
 #include "RevCounter.h"
 #include "Speedometer.h"
@@ -20,6 +21,8 @@ public:
 
     ~CarPanel() override;
 	RevCounter *left;
+	Speedometer *right;
+	Control *ctrl;
 
 private:
     int setStyle();
@@ -30,15 +33,9 @@ private:
     QGridLayout *layout;
     Display *center;
 
-signals:
-	void valueChanged(qreal);
-public slots:
-	void setSpeed(qreal);
-	void setRev(qreal);
 protected:
 	void mousePressEvent(QMouseEvent *event) override;
 	
 };
-
 
 #endif // CARPANEL_CARPANEL_H

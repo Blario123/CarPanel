@@ -2,7 +2,7 @@
 // Created by Blair on 01/10/2021.
 //
 
-#include "../include/CarPanel.h"
+#include "include/CarPanel.h"
 #include <QFile>
 #include <QTimer>
 #include <QFontDatabase>
@@ -12,22 +12,25 @@ int indicatorState = 0;
 void setNoViewScrollbars(QGraphicsView *pView);
 
 CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
+	ctrl = new Control;
     this->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
-    this->setGeometry(0, 0, 1600, 800);
-	
+    this->setGeometry(0, 0, 1600, 920);
+
 	layout = new QGridLayout(this);
 	layout->setContentsMargins(0, 0, 0 , 0);
 	
 	auto *scene = new QGraphicsScene;
 	auto *view = new QGraphicsView;
-	left = new RevCounter;
-//    auto *right = new Speedometer();
 	auto *background = new Background;
+	left = new RevCounter;
+    right = new Speedometer;
 	
+	left->dial->needle->setAngleLimit(ctrl->revSlider->maximum());
+	right->dial->needle->setAngleLimit(ctrl->speedSlider->maximum());
 	
 	scene->addItem(background);
 	scene->addItem(left);
-//	scene->addItem(right);
+	scene->addItem(right);
 
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 	view->setContentsMargins(0, 0, 0, 0);
@@ -69,21 +72,15 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 //  layout->addWidget(center, 0, 0);
 //	layout->addWidget(leftInd, 0, 0);
 //	layout->addWidget(rightInd, 0, 0);
-//	layout->addWidget(view, 0, 0);
-
+	layout->addWidget(ctrl, 1, 0);
     setLayout(layout);
+	
+	connect(ctrl, SIGNAL(speedChanged(qreal)), this->right->dial->needle, SLOT(setAngle(qreal)));
+	connect(ctrl, SIGNAL(revChanged(qreal)), this->left->dial->needle, SLOT(setAngle(qreal)));
+	connect(ctrl, SIGNAL(closeSignal()), this, SLOT(deleteLater()));
+	
 }
-/*
-int CarPanel::setStyle() {
-    QFile file(":/resources/CarPanel.qss");
-    if (file.open(QFile::ReadOnly)) {
-        this->setStyleSheet(QString::fromUtf8(file.readAll()));
-        return 0;
-    } else {
-        return 1;
-    }
-}
-*/
+
 CarPanel::~CarPanel() = default;
 
 void CarPanel::mousePressEvent(QMouseEvent *event) {
@@ -101,12 +98,4 @@ void CarPanel::mousePressEvent(QMouseEvent *event) {
 void setNoViewScrollbars(QGraphicsView *pView) {
 	pView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	pView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-}
-
-void CarPanel::setSpeed(qreal val) {
-	emit valueChanged(val);
-}
-
-void CarPanel::setRev(qreal val) {
-	emit valueChanged(val);
 }

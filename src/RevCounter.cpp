@@ -11,6 +11,8 @@ RevCounter::RevCounter(QGraphicsItem *parent) : QGraphicsItem(parent), QObject()
 //	dial->outer->setText(9, {"0", "10", "20", "30", "40", "50", "60", "70", "80"}, 15);
 }
 
+RevCounter::~RevCounter() = default;
+
 QRectF RevCounter::boundingRect() const {
 	return QRectF();
 }
@@ -23,8 +25,6 @@ void RevCounter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 }
 
-RevCounter::~RevCounter() = default;
-
 void RevCounter::setRev(qreal value) {
-	dial->setRev(value);
+	dial->setAngle(value);
 }

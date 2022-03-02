@@ -29,7 +29,7 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 	void setPosition(qreal, qreal);
 	void setIncrements(qreal, qreal);
-	void setRev(qreal);
+	void setAngle(qreal);
 	DialOuter *outer;
 	DialNeedle *needle;
 	DialIncrements *increments;
@@ -37,9 +37,10 @@ signals:
 	void valueChanged(qreal);
 	void positionChanged(qreal, qreal);
 	void incrementsChanged(qreal, qreal);
+public slots:
 private:
-	int mx;
-	int my;
+	qreal mx;
+	qreal my;
 };
 
 class DialOuter : public QObject, public QGraphicsItem {
@@ -100,13 +101,15 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 private:
-	qreal mx;
-	qreal my;
-	qreal mradius = 225;
-	qreal mangle = 0;
+	qreal mX;
+	qreal mY;
+	qreal mRadius = 225;
+	qreal mAngle = 0;
+	qreal mAngleLimit;
 public slots:
 	void setPosition(qreal, qreal);
 	void setAngle(qreal);
+	void setAngleLimit(qreal);
 };
 
 #endif // CARPANEL_DIAL_H

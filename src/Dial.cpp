@@ -9,6 +9,7 @@ Dial::Dial(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent)
 	outer = new DialOuter(this);
 	needle = new DialNeedle(this);
 	increments = new DialIncrements(this);
+	this->setZValue(100);
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), outer, SLOT(setPosition(qreal,qreal)));
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), needle, SLOT(setPosition(qreal,qreal)));
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), increments, SLOT(setPosition(qreal,qreal)));
@@ -17,6 +18,8 @@ Dial::Dial(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent)
 
 void Dial::setPosition(qreal x, qreal y) {
 	emit positionChanged(x, y);
+	this->mx = x;
+	this->my = y;
 }
 
 void Dial::setIncrements(qreal major, qreal minor) {
@@ -28,17 +31,19 @@ QRectF Dial::boundingRect() const {
 }
 
 QPainterPath Dial::shape() const {
-//	QPainterPath path;
-//	path.addEllipse(mx, my, mradius * 2, mradius * 2);
-//	path.translate(-mradius, -mradius);
-	return QGraphicsItem::shape();
+	QPainterPath path;
+	path.addEllipse(-20, -20, 40, 40);
+	path.translate(mx, my);
+	return path;
 }
 
 void Dial::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-
+	painter->setBrush(QBrush(0xFF00FF));
+	painter->setPen(0xFF00FF);
+	painter->drawPath(shape());
 }
 
-void Dial::setRev(qreal value) {
+void Dial::setAngle(qreal value) {
 	emit valueChanged(value);
 }
 
@@ -47,7 +52,7 @@ Dial::~Dial() = default;
 
 //<editor-fold desc="DialOuter">
 DialOuter::DialOuter(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
-
+	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
 DialOuter::~DialOuter() = default;
@@ -64,7 +69,6 @@ QPainterPath DialOuter::shape() const {
 }
 
 void DialOuter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-	qDebug() << "paint";
 	painter->setPen(QPen(QBrush(0xc0c0c0), 3));
 	painter->drawPath(shape());
 }
@@ -82,7 +86,7 @@ void DialOuter::setPosition(qreal x, qreal y) {
 
 //<editor-fold desc="DialText">
 DialText::DialText(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject() {
-
+	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
 DialText::~DialText() = default;
@@ -102,7 +106,7 @@ void DialText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 //<editor-fold desc="DialIncrements">
 DialIncrements::DialIncrements(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
-
+	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
 DialIncrements::~DialIncrements() = default;
@@ -130,8 +134,8 @@ void DialIncrements::setIncrements(qreal major, qreal minor) {
 //</editor-fold>
 
 //<editor-fold desc="DialNeedle">
-DialNeedle::DialNeedle(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
-
+DialNeedle::DialNeedle(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject(), mX(0), mY(0) {
+	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
 DialNeedle::~DialNeedle() = default;
@@ -142,8 +146,17 @@ QRectF DialNeedle::boundingRect() const {
 
 QPainterPath DialNeedle::shape() const {
 	QPainterPath path;
-	path.lineTo(mradius * sin(qDegreesToRadians((mangle/100)-130)), mradius * -cos(qDegreesToRadians((mangle/100)-130)));
-	path.translate(mx, my);
+	path.setFillRule(Qt::WindingFill);
+//	path.addEllipse(-10, -10, 20, 20);
+
+	path.moveTo(0, 0);
+	path.moveTo(10 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 220)), 10 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 220)));
+	path.lineTo(mRadius * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 130.75)), mRadius * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 130.75)));
+	path.lineTo(mRadius * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 129.75)), mRadius * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 129.75)));
+	path.lineTo(10 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 40)), 10 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 40)));
+	path.lineTo(50 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) + 38)), 50 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) + 38)));
+	path.lineTo(-50 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 119)), 50 * cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 119)));
+	path.translate(mX, mY);
 	return path;
 }
 
@@ -154,12 +167,16 @@ void DialNeedle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 }
 
 void DialNeedle::setPosition(qreal x, qreal y) {
-	this->mx = x;
-	this->my = y;
+	this->mX = x;
+	this->mY = y;
 }
 
 void DialNeedle::setAngle(qreal angle) {
-	this->mangle = angle;
+	this->mAngle = angle;
 	update();
+}
+
+void DialNeedle::setAngleLimit(qreal limit) {
+	this->mAngleLimit = limit;
 }
 //</editor-fold>
