@@ -22,7 +22,7 @@ class Dial : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit Dial(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
+	explicit Dial(QGraphicsItem *parent = nullptr);
 	~Dial() override;
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
@@ -47,7 +47,7 @@ class DialOuter : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DialOuter(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
+	explicit DialOuter(QGraphicsItem *parent = nullptr);
 	~DialOuter() override;
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
@@ -65,7 +65,7 @@ class DialText : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DialText(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
+	explicit DialText(QGraphicsItem *parent = nullptr);
 	~DialText() override;
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
@@ -77,7 +77,7 @@ class DialIncrements : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DialIncrements(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
+	explicit DialIncrements(QGraphicsItem *parent = nullptr);
 	~DialIncrements() override;
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
@@ -94,7 +94,7 @@ class DialNeedle : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DialNeedle(QGraphicsItem *parent = nullptr, QGraphicsScene *scene = nullptr);
+	explicit DialNeedle(QGraphicsItem *parent = nullptr);
 	~DialNeedle() override;
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;

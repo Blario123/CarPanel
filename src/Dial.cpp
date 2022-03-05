@@ -5,7 +5,7 @@
 #include "../include/Dial.h"
 
 //<editor-fold desc="Dial">
-Dial::Dial(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
+Dial::Dial(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
 	outer = new DialOuter(this);
 	needle = new DialNeedle(this);
 	increments = new DialIncrements(this);
@@ -38,9 +38,16 @@ QPainterPath Dial::shape() const {
 }
 
 void Dial::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-	painter->setBrush(QBrush(0xFF00FF));
-	painter->setPen(0xFF00FF);
+	painter->setBrush(QBrush(0x404040));
+	painter->setPen(0x404040);
 	painter->drawPath(shape());
+	QLinearGradient grad;
+	grad.setColorAt(0.1, 0xC0C0C0);
+	grad.setColorAt(0.4, Qt::black);
+	grad.setStart(mx-18, my-18);
+	grad.setFinalStop(mx+18, my+18);
+	painter->setPen(QPen(grad, 2));
+	painter->drawEllipse((int) mx-18, (int) my-18, 36, 36);
 }
 
 void Dial::setAngle(qreal value) {
@@ -51,7 +58,7 @@ Dial::~Dial() = default;
 //</editor-fold>
 
 //<editor-fold desc="DialOuter">
-DialOuter::DialOuter(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
+DialOuter::DialOuter(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -85,7 +92,7 @@ void DialOuter::setPosition(qreal x, qreal y) {
 //</editor-fold>
 
 //<editor-fold desc="DialText">
-DialText::DialText(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject() {
+DialText::DialText(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -105,7 +112,7 @@ void DialText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 //</editor-fold>
 
 //<editor-fold desc="DialIncrements">
-DialIncrements::DialIncrements(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
+DialIncrements::DialIncrements(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -134,7 +141,7 @@ void DialIncrements::setIncrements(qreal major, qreal minor) {
 //</editor-fold>
 
 //<editor-fold desc="DialNeedle">
-DialNeedle::DialNeedle(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsItem(parent), QObject(), mX(0), mY(0) {
+DialNeedle::DialNeedle(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mX(0), mY(0) {
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -147,15 +154,18 @@ QRectF DialNeedle::boundingRect() const {
 QPainterPath DialNeedle::shape() const {
 	QPainterPath path;
 	path.setFillRule(Qt::WindingFill);
-//	path.addEllipse(-10, -10, 20, 20);
-
-	path.moveTo(0, 0);
-	path.moveTo(10 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 220)), 10 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 220)));
-	path.lineTo(mRadius * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 130.75)), mRadius * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 130.75)));
-	path.lineTo(mRadius * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 129.75)), mRadius * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 129.75)));
-	path.lineTo(10 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 40)), 10 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 40)));
-	path.lineTo(50 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) + 38)), 50 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) + 38)));
-	path.lineTo(-50 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 119)), 50 * cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 119)));
+	path.moveTo(10 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 40)),
+				10 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 40))); //First point, +90 deg point.
+	path.lineTo(mRadius * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 129.75)),
+				mRadius * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 129.75)));
+	path.lineTo(mRadius * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 130.25)),
+				mRadius * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 130.25)));
+	path.lineTo(10 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 220)),
+				10 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 220)));
+	path.lineTo((40 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) + 50))) - (10 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 40))),
+				(40 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) + 50))) - (10 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 40))));
+	path.lineTo((40 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) + 50))) - (10 * sin(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) - 220))),
+				(40 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) + 50))) - (10 * -cos(qDegreesToRadians(mAngle * ((qreal) 260 / mAngleLimit) -220))));
 	path.translate(mX, mY);
 	return path;
 }
