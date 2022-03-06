@@ -83,11 +83,17 @@ public:
 	QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 private:
-	qreal mx;
-	qreal my;
+	QPainterPath redPath;
+	bool doLastLine;
+	qreal mX;
+	qreal mY;
+	qreal mMajor;
+	qreal mMinor;
+	qreal mRadius = 225;
 public slots:
 	void setPosition(qreal, qreal);
 	void setIncrements(qreal, qreal);
+	void setRadius(qreal);
 };
 
 class DialNeedle : public QObject, public QGraphicsItem {

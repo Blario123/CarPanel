@@ -7,9 +7,8 @@
 //<editor-fold desc="Dial">
 Dial::Dial(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
 	outer = new DialOuter(this);
-	needle = new DialNeedle(this);
 	increments = new DialIncrements(this);
-	this->setZValue(100);
+	needle = new DialNeedle(this);
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), outer, SLOT(setPosition(qreal,qreal)));
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), needle, SLOT(setPosition(qreal,qreal)));
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), increments, SLOT(setPosition(qreal,qreal)));
@@ -112,7 +111,7 @@ void DialText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 //</editor-fold>
 
 //<editor-fold desc="DialIncrements">
-DialIncrements::DialIncrements(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
+DialIncrements::DialIncrements(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mX(0), mY(0) {
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -123,20 +122,58 @@ QRectF DialIncrements::boundingRect() const {
 }
 
 QPainterPath DialIncrements::shape() const {
-	return QGraphicsItem::shape();
+	QPainterPath path;
+	qreal dAMajor = 260 / (((doLastLine) ? mMajor : mMajor + 0.5) - 1);
+	qreal dAMinor = dAMajor / (mMinor + 1);
+	qreal majAngle, minAngle;
+	for(int i = 0; i < mMajor; i++) {
+		majAngle = -130 + (i * dAMajor);
+		path.moveTo(mRadius * sin(qDegreesToRadians(majAngle)), mRadius * -cos(qDegreesToRadians(majAngle)));
+		path.lineTo((mRadius - 20) * sin(qDegreesToRadians(majAngle)), (mRadius - 20) * -cos(qDegreesToRadians(majAngle)));
+		if(i != mMajor - 1) {
+			for(int j = 0; j < mMinor; j++) {
+				minAngle = majAngle + ((j + 1) * dAMinor);
+				path.moveTo(mRadius * sin(qDegreesToRadians(minAngle)), mRadius * -cos(qDegreesToRadians(minAngle)));
+				path.lineTo((mRadius - ((fmod(j, 2) == 0) ? 10 : 15)) * sin(qDegreesToRadians(minAngle)), (mRadius - ((fmod(j, 2) == 0) ? 10 : 15)) * -cos(qDegreesToRadians(minAngle)));
+			}
+		}
+	}
+	if(!doLastLine) {
+		for(int j = 0; j < mMinor - 1; j++) {
+			minAngle = majAngle + ((j + 1) * dAMinor);
+			path.moveTo(mRadius * sin(qDegreesToRadians(minAngle)), mRadius * -cos(qDegreesToRadians(minAngle)));
+			path.lineTo((mRadius - ((fmod(j, 2) == 0) ? 10 : 15)) * sin(qDegreesToRadians(minAngle)), (mRadius - ((fmod(j, 2) == 0) ? 10 : 15)) * -cos(qDegreesToRadians(minAngle)));
+		}
+	}
+	
+	path.translate(mX, mY);
+	return path;
 }
 
 void DialIncrements::setPosition(qreal x, qreal y) {
-	this->mx = x;
-	this->my = y;
+	this->mX = x;
+	this->mY = y;
+}
+
+void DialIncrements::setRadius(qreal radius) {
+	this->mRadius = radius;
 }
 
 void DialIncrements::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-
+	painter->setPen(QPen(QColor(0xC0C0C0), 3));
+	painter->drawPath(shape());
 }
 
 void DialIncrements::setIncrements(qreal major, qreal minor) {
-
+	this->mMajor = major;
+	if(fmod(mMajor, 1) != 0) {
+		this->mMajor -= fmod(major, 1);
+		this->doLastLine = false;
+	} else {
+		this->doLastLine = true;
+	}
+	qDebug() << mMajor;
+	this->mMinor = minor;
 }
 //</editor-fold>
 
@@ -172,7 +209,16 @@ QPainterPath DialNeedle::shape() const {
 
 void DialNeedle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 	painter->setBrush(Qt::white);
-	painter->setPen(Qt::white);
+	if(0) {
+		QLinearGradient grad;
+		grad.setColorAt(0.2, Qt::black);
+		grad.setColorAt(0.8, Qt::white);
+		grad.setStart(mX-mRadius, mY-mRadius);
+		grad.setFinalStop(mX+mRadius, mY+mRadius);
+		painter->setBrush(QBrush(grad));
+	} else {
+		painter->setPen(Qt::white);
+	}
 	painter->drawPath(shape());
 }
 

@@ -7,7 +7,7 @@
 Speedometer::Speedometer(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
 	dial = new Dial(this);
 	dial->setPosition(1275, 375);
-	
+	dial->setIncrements(8.5, 3);
 //	dial->outer->setTextRadius(250);
 //
 //
