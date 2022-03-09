@@ -21,9 +21,6 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 	Dial *dial;
 
-private:
-public slots:
-	void setSpeed(qreal);
 };
 
 #endif // CARPANEL_SPEEDOMETER_H

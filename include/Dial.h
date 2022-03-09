@@ -33,6 +33,7 @@ public:
 	DialOuter *outer;
 	DialNeedle *needle;
 	DialIncrements *increments;
+	DialText *text;
 signals:
 	void valueChanged(qreal);
 	void positionChanged(qreal, qreal);
@@ -70,7 +71,13 @@ public:
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
+public slots:
+	void setPosition(qreal, qreal);
+	void setText(QList<QString>);
+	void setIncrements(qreal, qreal);
+private:
+	qreal mX, mY, mRadius = 235, mMajorIncrements;
+	QList<QString> mText;
 };
 
 class DialIncrements : public QObject, public QGraphicsItem {

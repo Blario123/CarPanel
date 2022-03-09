@@ -4,15 +4,20 @@
 
 #include "../include/Dial.h"
 
+#include <utility>
+
 //<editor-fold desc="Dial">
 Dial::Dial(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
 	outer = new DialOuter(this);
 	increments = new DialIncrements(this);
 	needle = new DialNeedle(this);
+	text = new DialText(this);
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), outer, SLOT(setPosition(qreal,qreal)));
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), needle, SLOT(setPosition(qreal,qreal)));
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), increments, SLOT(setPosition(qreal,qreal)));
+	connect(this, SIGNAL(positionChanged(qreal,qreal)), text, SLOT(setPosition(qreal,qreal)));
 	connect(this, SIGNAL(incrementsChanged(qreal,qreal)), increments, SLOT(setIncrements(qreal,qreal)));
+	connect(this, SIGNAL(incrementsChanged(qreal,qreal)), text, SLOT(setIncrements(qreal,qreal)));
 }
 
 void Dial::setPosition(qreal x, qreal y) {
@@ -102,11 +107,39 @@ QRectF DialText::boundingRect() const {
 }
 
 QPainterPath DialText::shape() const {
-	return QGraphicsItem::shape();
+	QPainterPath path, tempPath;
+	QPointF tempPoint;
+	qreal majAngle, dAMaj = 260 / (mText.size() - ((mMajorIncrements == mText.size()) ? 1 : 0.5));
+	for(int i = 0; i < mText.size(); i++) {
+		majAngle = -130 + (i * dAMaj);
+		tempPoint = QPointF(mRadius * sin(qDegreesToRadians(majAngle)), mRadius * -cos(qDegreesToRadians(majAngle)));
+		tempPath.addText(tempPoint, QFont("CEROM", 15), mText[i]);
+		tempPath.translate(-tempPath.boundingRect().width() / 2, 0);
+		tempPath = QTransform().translate(mRadius * sin(qDegreesToRadians(majAngle)), mRadius * -cos(qDegreesToRadians(majAngle))).rotate(majAngle).translate(mRadius * -sin(qDegreesToRadians(majAngle)), mRadius * cos(qDegreesToRadians(majAngle))).map(tempPath);
+		path.addPath(tempPath);
+		tempPath.clear();
+	}
+	path.translate(mX, mY);
+	return path;
+}
+
+void DialText::setPosition(qreal x, qreal y) {
+	this->mX = x;
+	this->mY = y;
+}
+
+void DialText::setText(QList<QString> text) {
+	this->mText = text;
 }
 
 void DialText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+	painter->setBrush(Qt::white);
+	painter->setPen(Qt::white);
+	painter->drawPath(shape());
+}
 
+void DialText::setIncrements(qreal major, qreal minor) {
+	this->mMajorIncrements = major;
 }
 //</editor-fold>
 
@@ -172,7 +205,6 @@ void DialIncrements::setIncrements(qreal major, qreal minor) {
 	} else {
 		this->doLastLine = true;
 	}
-	qDebug() << mMajor;
 	this->mMinor = minor;
 }
 //</editor-fold>
