@@ -22,16 +22,14 @@ public:
     ~CarPanel() override;
 	RevCounter *left;
 	Speedometer *right;
+    Display *center;
 	Control *ctrl;
 
 private:
-    int setStyle();
-	
 	Indicator *leftInd;
 	Indicator *rightInd;
 
     QGridLayout *layout;
-    Display *center;
 
 protected:
 	void mousePressEvent(QMouseEvent *event) override;

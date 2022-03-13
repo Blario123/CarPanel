@@ -31,7 +31,7 @@ set(source_gui
         src/RevCounter.cpp
         src/Dial.cpp
         src/Indicator.cpp
-        src/DisplayTop.cpp)
+        )
 
 set(header_gui
         include/CarPanel.h
@@ -41,7 +41,6 @@ set(header_gui
         include/RevCounter.h
         include/Dial.h
         include/Indicator.h
-        include/DisplayTop.h
         include/Background.h)
 
 add_executable(CarPanel ${source_gui} ${header_gui})
