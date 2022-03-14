@@ -6,41 +6,51 @@
 #include <QPainterPath>
 #include "../include/Indicator.h"
 
-Indicator::Indicator(int ix, int iy, QColor icolour,float iorientation, QWidget *parent) : QWidget(parent) {
-	this->x = ix;
-	this->y = iy;
-	this->orientation = iorientation;
-	this->colour = new QColor(icolour);
-	
+Indicator::Indicator(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {}
+
+void Indicator::toggle() {
+	if(mState) {
+		mState = false;
+	} else {
+		mState = true;
+	}
+	update();
 }
 
-Indicator::~Indicator() = default;
-
-void Indicator::paintEvent(QPaintEvent *p) {
-	QPolygon path;
+QPainterPath Indicator::shape() const {
+	QPainterPath path;
+	QPolygonF poly;
+	QPointF origin(mX + (mSize / 2), mY + (mSize / 2));
+	poly << QPointF(origin.x(), origin.y() + mSize / 2)
+			<< QPointF(origin.x() + 30, origin.y())
+			<< QPointF(origin.x() + 30, origin.y() + 12)
+			<< QPointF(origin.x() + mSize, origin.y() + 12)
+			<< QPointF(origin.x() + mSize, origin.y() + 52)
+			<< QPointF(origin.x() + 30, origin.y() + 52)
+			<< QPointF(origin.x() + 30, origin.y() + mSize)
+			<< QPointF(origin.x(), origin.y() + (mSize / 2));
 	
-	QPoint origin(x + (this->size / 2), y + (this->size / 2));
-	
-	path 	<< QPoint(origin.x(), origin.y() + this->size / 2)
-			<< QPoint(origin.x() + 30, origin.y())
-			<< QPoint(origin.x() + 30, origin.y() + 12)
-			<< QPoint(origin.x() + this->size, origin.y() + 12)
-			<< QPoint(origin.x() + this->size, origin.y() + 52)
-			<< QPoint(origin.x() + 30, origin.y() + 52)
-			<< QPoint(origin.x() + 30, origin.y() + this->size)
-			<< QPoint(origin.x(), origin.y() + (this->size / 2));
-	
-	path = QTransform().translate(origin.x(), origin.y()).rotate(this->orientation).translate(-origin.x(), -origin.y()).map(path);
-	
-	QPainterPath indicator;
-	indicator.addPolygon(path);
-	QPainter painter(this);
-	painter.setRenderHint(QPainter::Antialiasing);
-	painter.drawPolygon(path);
-	painter.fillPath(indicator, *this->colour);
+	poly = QTransform().translate(origin.x(), origin.y()).rotate(mOrientation).translate(-origin.x(), -origin.y()).map(poly);
+	if(mOrientation > 0)  {
+		poly.translate(0, mSize);
+	}
+	path.addPolygon(poly);
+	return path;
 }
 
-void Indicator::setColour(QColor indColour) {
-	*this->colour = indColour;
-	this->update();
+void Indicator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+	painter->setBrush(QBrush((mState) ? 0x00ff00 : 0x101010));
+	painter->drawPath(shape());
+}
+
+void Indicator::setPosition(qreal x, qreal y) {
+	mX = x;
+	mY = y;
+	update();
+}
+
+void Indicator::toggleOrientation() {
+	if(mOrientation == 0) {
+		mOrientation = 180;
+	}
 }

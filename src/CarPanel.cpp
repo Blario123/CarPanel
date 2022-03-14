@@ -22,6 +22,12 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	ctrl = new Control;
 	left = new RevCounter;
     right = new Speedometer;
+	leftInd = new Indicator;
+	rightInd = new Indicator;
+	
+	leftInd->setPosition(500, 100);
+	rightInd->setPosition(1036, 100);
+	rightInd->toggleOrientation();
 	
 	center = new Display;
 	center->setPosition(650, 100);
@@ -33,6 +39,8 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	scene->addItem(left);
 	scene->addItem(right);
 	scene->addItem(center);
+	scene->addItem(leftInd);
+	scene->addItem(rightInd);
 
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 	
@@ -47,10 +55,7 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	view->setStyleSheet("background: transparent");
 
 	layout->addWidget(view, 0, 0);
-/****
-	leftInd = new Indicator(500,150 - 64,0x101010);
-	rightInd = new Indicator(1036,150,0x101010,180);
-****/
+	
 	QFontDatabase::addApplicationFont("qrc:///resouces/CEROM.otf");
 	
 	layout->addWidget(ctrl, 1, 0);
@@ -60,19 +65,13 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	connect(ctrl, SIGNAL(speedChanged(qreal)), this->center, SLOT(setSpeed(qreal)));
 	connect(ctrl, SIGNAL(revChanged(qreal)), this->left->dial->needle, SLOT(setAngle(qreal)));
 	connect(ctrl, SIGNAL(closeSignal()), this, SLOT(deleteLater()));
-	
+	connect(this, SIGNAL(toggleLInd()), leftInd, SLOT(toggle()));
+	connect(this, SIGNAL(toggleRInd()), rightInd, SLOT(toggle()));
 }
 
 CarPanel::~CarPanel() = default;
 
 void CarPanel::mousePressEvent(QMouseEvent *event) {
-	if(indicatorState == 0) {
-//		leftInd->setColour(0x00ff00);
-//		rightInd->setColour(0x00ff00);
-		indicatorState = 1;
-	} else {
-//		leftInd->setColour(0x101010);
-//		rightInd->setColour(0x101010);
-		indicatorState = 0;
-	}
+	emit toggleLInd();
+	emit toggleRInd();
 }

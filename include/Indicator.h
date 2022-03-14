@@ -5,25 +5,29 @@
 #ifndef CARPANEL_INDICATOR_H
 #define CARPANEL_INDICATOR_H
 
-#include <QWidget>
+#include <QObject>
+#include <QGraphicsItem>
 
-class Indicator : public QWidget {
+class Indicator : public QObject, public QGraphicsItem {
 	Q_OBJECT
 	
 public:
-	explicit Indicator(int ix, int iy, QColor icolour, float dorientation = 0, QWidget *parent = nullptr);
-	~Indicator() override;
+	explicit Indicator(QGraphicsItem *parent = nullptr);
+	~Indicator() override = default;
+	QRectF boundingRect() const override { return {}; }
+	QPainterPath shape() const override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 public slots:
-	void setColour(QColor indColour);
+	void toggle();
+	void setPosition(qreal, qreal);
+	void toggleOrientation();
 
 private:
-	int x;
-	int y;
-	int size = 64;
-	float orientation;
-	QColor *colour;
-	void paintEvent(QPaintEvent *p) override;
+	bool mState = false;
+	qreal mX = 0, mY = 0;
+	qreal mSize = 64;
+	float mOrientation = 0;
 	
 };
 

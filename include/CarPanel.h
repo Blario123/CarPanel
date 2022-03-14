@@ -18,19 +18,19 @@ class CarPanel : public QWidget {
 
 public:
     explicit CarPanel(QWidget *parent = nullptr);
-
     ~CarPanel() override;
 	RevCounter *left;
 	Speedometer *right;
     Display *center;
 	Control *ctrl;
-
-private:
 	Indicator *leftInd;
 	Indicator *rightInd;
 
+private:
     QGridLayout *layout;
-
+signals:
+	void toggleLInd();
+	void toggleRInd();
 protected:
 	void mousePressEvent(QMouseEvent *event) override;
 	
