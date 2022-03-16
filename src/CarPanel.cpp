@@ -21,8 +21,8 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	leftInd = new Indicator;
 	rightInd = new Indicator;
 	
-	leftInd->setPosition(500, 100);
-	rightInd->setPosition(1036, 100);
+	leftInd->setPosition(500, 75);
+	rightInd->setPosition(1036, 75);
 	rightInd->toggleOrientation();
 	
 	center = new DisplayMain;
