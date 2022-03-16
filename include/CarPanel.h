@@ -6,6 +6,8 @@
 #define CARPANEL_CARPANEL_H
 
 #include <QGraphicsView>
+#include <QTimer>
+#include <QFontDatabase>
 #include "Control.h"
 #include "Display.h"
 #include "RevCounter.h"
@@ -18,7 +20,7 @@ class CarPanel : public QWidget {
 
 public:
     explicit CarPanel(QWidget *parent = nullptr);
-    ~CarPanel() override;
+    ~CarPanel() override = default;
 	RevCounter *left;
 	Speedometer *right;
     Display *center;

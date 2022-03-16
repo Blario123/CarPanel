@@ -3,10 +3,6 @@
 //
 
 #include "include/CarPanel.h"
-#include <QTimer>
-#include <QFontDatabase>
-
-int indicatorState = 0;
 
 CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
     this->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
@@ -62,14 +58,12 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
     setLayout(layout);
 	
 	connect(ctrl, SIGNAL(speedChanged(qreal)), this->right->dial->needle, SLOT(setAngle(qreal)));
-	connect(ctrl, SIGNAL(speedChanged(qreal)), this->center, SLOT(setSpeed(qreal)));
+	connect(ctrl, SIGNAL(speedChanged(qreal)), this->center->text, SLOT(setSpeed(qreal)));
 	connect(ctrl, SIGNAL(revChanged(qreal)), this->left->dial->needle, SLOT(setAngle(qreal)));
 	connect(ctrl, SIGNAL(closeSignal()), this, SLOT(deleteLater()));
 	connect(this, SIGNAL(toggleLInd()), leftInd, SLOT(toggle()));
 	connect(this, SIGNAL(toggleRInd()), rightInd, SLOT(toggle()));
 }
-
-CarPanel::~CarPanel() = default;
 
 void CarPanel::mousePressEvent(QMouseEvent *event) {
 	emit toggleLInd();
