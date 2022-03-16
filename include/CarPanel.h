@@ -23,7 +23,7 @@ public:
     ~CarPanel() override = default;
 	RevCounter *left;
 	Speedometer *right;
-    Display *center;
+    DisplayMain *center;
 	Control *ctrl;
 	Indicator *leftInd;
 	Indicator *rightInd;

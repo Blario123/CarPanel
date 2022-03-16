@@ -16,12 +16,12 @@ class DisplayLogo;
 class DisplayBorder;
 class DisplayText;
 
-class Display : public QObject, public QGraphicsItem {
+class DisplayMain : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-    explicit Display(QGraphicsItem *parent = nullptr);
-    ~Display() override = default;
+    explicit DisplayMain(QGraphicsItem *parent = nullptr);
+    ~DisplayMain() override = default;
 	QRectF boundingRect() const override { return {}; }
 	QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;

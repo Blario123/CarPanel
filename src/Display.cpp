@@ -5,7 +5,7 @@
 #include "../include/Display.h"
 
 //<editor-fold desc="Display">
-Display::Display(QGraphicsItem *parent) : QObject(), QGraphicsItem(parent) {
+DisplayMain::DisplayMain(QGraphicsItem *parent) : QObject(), QGraphicsItem(parent) {
 	logo = new DisplayLogo(this);
 	border = new DisplayBorder(this);
 	text = new DisplayText(this);
@@ -26,18 +26,18 @@ Display::Display(QGraphicsItem *parent) : QObject(), QGraphicsItem(parent) {
 	timer->start(2000);
 }
 
-QPainterPath Display::shape() const {
+QPainterPath DisplayMain::shape() const {
 	return {};
 }
 
-void Display::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void DisplayMain::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 }
 
-void Display::setPosition(qreal x, qreal y) {
+void DisplayMain::setPosition(qreal x, qreal y) {
 	emit(positionChanged(x, y));
 }
 
-void Display::showDisplay() {
+void DisplayMain::showDisplay() {
 	show();
 }
 //</editor-fold>

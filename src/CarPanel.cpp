@@ -25,7 +25,7 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	rightInd->setPosition(1036, 100);
 	rightInd->toggleOrientation();
 	
-	center = new Display;
+	center = new DisplayMain;
 	center->setPosition(650, 100);
 	
 	left->dial->needle->setAngleLimit(ctrl->revSlider->maximum());
