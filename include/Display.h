@@ -98,10 +98,13 @@ public slots:
 };
 
 class DisplayText : public QObject, public QGraphicsItem {
+
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DisplayText(QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() { hide(); }
+	explicit DisplayText(QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() {
+		hide();
+	}
 	~DisplayText() override = default;
 	QRectF boundingRect() const override { return {}; }
 	QPainterPath shape() const override;
@@ -112,9 +115,30 @@ public slots:
 	void hideText();
 	void setPosition(qreal, qreal);
 	void setSpeed(qreal);
+	void setPage(int);
+	void setValueRange(int);
 private:
-	qreal mX = 0, mY = 0, mSpeed = 0;
-	int switchValue = 0;
+	static QPainterPath addText(QPainterPath, QFont, int, qreal, qreal, const QString&, bool) ;
+	static QPainterPath addTextNoTranslate(QPainterPath, QFont, int, qreal, qreal, const QString&) ;
+	typedef struct pageData {
+		QString title, value, unit, rangeText;
+	} data;
+	
+	data *displayData = new data;
+	qreal 	mX = 0,
+			mY = 0,
+			mSpeed = 0,
+			mConsumption = 0,
+			mTime = 0,
+			mOilTemp = 0,
+			mWarning,
+			mTrip = 0,
+			mRange = 0;
+	// Arrays for display values. 0: since start, 1: since refuel, 2: long term
+	qreal mConsumptionArr[3], mSpeedArr[3], mTimeArr[3], mDistanceArr[3];
+	QString rangeTextArr[3] = {"Since Start", "Since Refuel", "Long-term"};
+	int page = 0,
+		mValueRange = 0;
 };
 
 #endif // CARPANEL_DISPLAY_H

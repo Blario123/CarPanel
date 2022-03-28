@@ -45,18 +45,88 @@ void DisplayMain::showDisplay() {
 //<editor-fold desc="DisplayText">
 QPainterPath DisplayText::shape() const {
 	QPainterPath path, tempPath;
-	QString value;
-	switch(switchValue) {
+	QFont f("Dubai", QFont::Bold);
+	QPointF tempPoint;
+	switch(page) {
 		case 0:
-			value = QString::number(round(mSpeed/100));
+			displayData->title = "";
+			displayData->value = QString::number(round(mSpeed/100));
+			displayData->unit = "mph";
+			displayData->rangeText = "";
+			break;
+		case 1:
+			displayData->title = "Warning at";
+			displayData->value = "---";
+			displayData->unit = "mph";
+			displayData->rangeText = "";
+			break;
+		case 2:
+			displayData->title = "Oil Temperature";
+			displayData->value = QString::number(mOilTemp);
+			displayData->unit = "°C";
+			displayData->rangeText = "";
+			break;
+		case 3:
+			displayData->title = "Consumption";
+			displayData->value = QString::number(mConsumption);
+			displayData->unit = "mpg";
+			displayData->rangeText = "";
+			break;
+		case 4:
+			displayData->title = "Avg. Consumption";
+			displayData->value = QString::number(mConsumptionArr[mValueRange]);
+			displayData->unit = "mpg";
+			displayData->rangeText = rangeTextArr[mValueRange];
+			break;
+		case 5:
+			displayData->title = "Range";
+			displayData->value = QString::number(mRange);
+			displayData->unit = "mi";
+			displayData->rangeText = "";
+			break;
+		case 6:
+			displayData->title = "Travelling Time";
+			displayData->value = QString::number(mTimeArr[mValueRange]);
+			displayData->unit = "hr";
+			displayData->rangeText = rangeTextArr[mValueRange];
+			break;
+		case 7:
+			displayData->title = "Distance";
+			displayData->value = QString::number(mDistanceArr[mValueRange]);
+			displayData->unit = "mi";
+			displayData->rangeText = rangeTextArr[mValueRange];
+			break;
+		case 8:
+			displayData->title = "Average Speed";
+			displayData->value = QString::number(mSpeedArr[mValueRange]);
+			displayData->unit = "mph";
+			displayData->rangeText = rangeTextArr[mValueRange];
+			break;
 		default:
-			value = QString::number(round(mSpeed/100));
+			displayData->title = "";
+			displayData->value = "";
+			displayData->unit = "";
+			displayData->rangeText = "";
+			break;
 	}
-	//
-	tempPath.addText(250, 250, QFont("CEROM", 30), value);
-	tempPath.translate(-tempPath.boundingRect().width(), 0);
-	path.addPath(tempPath);
+	path.addPath(addText(tempPath, f, 16, 150, 85, displayData->title, true));
+	path.addPath(addText(tempPath, f, 55, 190, 250, displayData->value, false));
+	path.addPath(addTextNoTranslate(tempPath, f, 15, 200, 250, displayData->unit));
+	path.addPath(addTextNoTranslate(tempPath, f, 15, 25, 350, displayData->rangeText));
 	path.translate(mX, mY);
+	return path;
+}
+
+QPainterPath DisplayText::addText(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t, bool o) {
+	f.setPointSize(pt);
+	path.addText(x, y, f, t);
+	path.translate(o?-path.boundingRect().width()/2:-path.boundingRect().width(), 0);
+	return path;
+}
+
+QPainterPath DisplayText::addTextNoTranslate(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t) {
+	f.setPointSize(pt);
+	path.addText(x, y, f, t);
 	return path;
 }
 
@@ -82,4 +152,15 @@ void DisplayText::setPosition(qreal x, qreal y) {
 void DisplayText::setSpeed(qreal speed) {
 	this->mSpeed = speed;
 }
+
+void DisplayText::setPage(int p) {
+	this->page = p;
+	update();
+}
+
+void DisplayText::setValueRange(int vr) {
+	this->mValueRange = vr;
+	update();
+}
+
 //</editor-fold>
