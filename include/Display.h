@@ -84,6 +84,11 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
 		painter->setPen(0x404040);
 		painter->drawPath(shape());
+		painter->setPen(QPen(QColor(0x909090), 2, Qt::DotLine));
+		painter->drawLine((int) mX, (int) mY + 45, (int) mX + 300, (int) mY + 45);
+		painter->drawLine((int) mX, (int) mY + 280, (int) mX + 300, (int) mY + 280);
+		painter->setPen(QPen(QColor(0xC0C0C0), 3));
+		painter->drawRect((int) mX + 5, (int) mY + 50, 290, 225);
 	}
 private:
 	qreal mX = 0, mY = 0;
