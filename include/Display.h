@@ -11,10 +11,12 @@
 #include <QPixmap>
 #include <QPainterPath>
 #include <QTimer>
+#include <QTime>
 
 class DisplayLogo;
 class DisplayBorder;
 class DisplayText;
+class DisplayTime;
 
 class DisplayMain : public QObject, public QGraphicsItem {
 Q_OBJECT
@@ -28,6 +30,7 @@ public:
 	DisplayLogo *logo;
 	DisplayBorder *border;
 	DisplayText *text;
+	DisplayTime *time;
 private:
 public slots:
 	void showDisplay();
@@ -139,6 +142,27 @@ private:
 	QString rangeTextArr[3] = {"Since Start", "Since Refuel", "Long-term"};
 	int page = 0,
 		mValueRange = 0;
+};
+
+class DisplayTime : public QObject, public QGraphicsItem {
+Q_OBJECT
+Q_INTERFACES(QGraphicsItem)
+public:
+	explicit DisplayTime(QGraphicsItem *parent = nullptr);
+	~DisplayTime() = default;
+	QRectF boundingRect() const override { return {}; }
+	QPainterPath shape() const override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+private:
+	int oldTime{};
+	qreal mX = 0, mY = 0;
+	QTime time;
+public slots:
+	void updateTime();
+	void showTime();
+	void hideTime();
+	void setPosition(qreal, qreal);
+signals:
 };
 
 #endif // CARPANEL_DISPLAY_H

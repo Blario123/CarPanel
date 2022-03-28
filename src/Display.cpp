@@ -9,6 +9,7 @@ DisplayMain::DisplayMain(QGraphicsItem *parent) : QObject(), QGraphicsItem(paren
 	logo = new DisplayLogo(this);
 	border = new DisplayBorder(this);
 	text = new DisplayText(this);
+	time = new DisplayTime(this);
 	
 	text->setZValue(1);
 	
@@ -17,10 +18,12 @@ DisplayMain::DisplayMain(QGraphicsItem *parent) : QObject(), QGraphicsItem(paren
 	connect(timer, &QTimer::timeout, logo, &DisplayLogo::hideLogo);
 	connect(timer, &QTimer::timeout, text, &DisplayText::showText);
 	connect(timer, &QTimer::timeout, border, &DisplayBorder::showBorder);
+	connect(timer, &QTimer::timeout, time, &DisplayTime::showTime);
 	
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), border, SLOT(setPosition(qreal,qreal)));
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), logo, SLOT(setPosition(qreal,qreal)));
 	connect(this, SIGNAL(positionChanged(qreal,qreal)), text, SLOT(setPosition(qreal,qreal)));
+	connect(this, SIGNAL(positionChanged(qreal,qreal)), time, SLOT(setPosition(qreal,qreal)));
 	
 	timer->setSingleShot(true);
 	timer->start(2000);
@@ -163,4 +166,48 @@ void DisplayText::setValueRange(int vr) {
 	update();
 }
 
+//</editor-fold>
+
+//<editor-fold desc="DisplayTime">
+DisplayTime::DisplayTime(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
+	hide();
+	time = QTime::currentTime();
+	auto *timer = new QTimer(this);
+	connect(timer, &QTimer::timeout, this, &DisplayTime::updateTime);
+	timer->start(1000);
+}
+
+void DisplayTime::updateTime() {
+	time = QTime::currentTime();
+	if(time.minute() != oldTime) {
+		oldTime = time.minute();
+		update();
+	}
+}
+
+QPainterPath DisplayTime::shape() const {
+	QPainterPath path;
+	path.addText(225, 30, QFont("Dubai", 15, QFont::DemiBold), time.toString("HH:mm"));
+	path.translate(mX, mY);
+	return path;
+}
+
+void DisplayTime::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+	painter->setPen(Qt::white);
+	painter->setBrush(Qt::white);
+	painter->drawPath(shape());
+}
+
+void DisplayTime::showTime() {
+	show();
+}
+
+void DisplayTime::hideTime() {
+	hide();
+}
+
+void DisplayTime::setPosition(qreal x, qreal y) {
+	this->mX = x;
+	this->mY = y;
+}
 //</editor-fold>
