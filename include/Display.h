@@ -82,9 +82,9 @@ public:
 		return path;
 	}
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
-		painter->setPen(0x404040);
+		painter->setPen(0x202020);
 		painter->drawPath(shape());
-		painter->setPen(QPen(QColor(0x909090), 2, Qt::DotLine));
+		painter->setPen(QPen(QColor(0xCCCCCC), 1, Qt::DotLine));
 		painter->drawLine((int) mX, (int) mY + 45, (int) mX + 300, (int) mY + 45);
 		painter->drawLine((int) mX, (int) mY + 280, (int) mX + 300, (int) mY + 280);
 		painter->setPen(QPen(QColor(0xC0C0C0), 3));
@@ -110,14 +110,11 @@ class DisplayText : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DisplayText(QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() {
-		hide();
-	}
+	explicit DisplayText(QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() { hide(); }
 	~DisplayText() override = default;
 	QRectF boundingRect() const override { return {}; }
 	QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
 public slots:
 	void showText();
 	void hideText();
@@ -126,10 +123,13 @@ public slots:
 	void setPage(int);
 	void setValueRange(int);
 private:
-	static QPainterPath addText(QPainterPath, QFont, int, qreal, qreal, const QString&, bool) ;
-	static QPainterPath addTextNoTranslate(QPainterPath, QFont, int, qreal, qreal, const QString&) ;
+	static QPainterPath addText(QPainterPath, QFont, int, qreal, qreal, const QString&, bool);
+	static QPainterPath addTextNoTranslate(QPainterPath, QFont, int, qreal, qreal, const QString&);
 	typedef struct pageData {
-		QString title, value, unit, rangeText;
+		QString title,
+				value,
+				unit,
+				rangeText;
 	} data;
 	
 	data *displayData = new data;
@@ -139,14 +139,23 @@ private:
 			mConsumption = 0,
 			mTime = 0,
 			mOilTemp = 0,
-			mWarning,
+			mWarning = 0,
 			mTrip = 0,
-			mRange = 0;
+			mCompTrip = 0,
+			mRange = 0,
+			mTemp = 0;
+	inline static qreal mRightPos;
+private:
 	// Arrays for display values. 0: since start, 1: since refuel, 2: long term
-	qreal mConsumptionArr[3], mSpeedArr[3], mTimeArr[3], mDistanceArr[3];
-	QString rangeTextArr[3] = {"Since Start", "Since Refuel", "Long-term"};
+	qreal 	mConsumptionArr[3],
+			mSpeedArr[3],
+			mTimeArr[3],
+			mDistanceArr[3];
+	QString rangeTextArr[3] = {"Since Start", "Since Refuel", "Long-term"},
+			gearTextArr[8] = {"", "R", "1", "2", "3", "4", "5", "6"};
 	int page = 0,
-		mValueRange = 0;
+		mValueRange = 0,
+		mGear = 0;
 };
 
 class DisplayTime : public QObject, public QGraphicsItem {
@@ -154,7 +163,7 @@ Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
 	explicit DisplayTime(QGraphicsItem *parent = nullptr);
-	~DisplayTime() = default;
+	~DisplayTime() override = default;
 	QRectF boundingRect() const override { return {}; }
 	QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;

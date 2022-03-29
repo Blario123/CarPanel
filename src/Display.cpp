@@ -49,7 +49,6 @@ void DisplayMain::showDisplay() {
 QPainterPath DisplayText::shape() const {
 	QPainterPath path, tempPath;
 	QFont f("Dubai", QFont::Bold);
-	QPointF tempPoint;
 	switch(page) {
 		case 0:
 			displayData->title = "";
@@ -59,7 +58,7 @@ QPainterPath DisplayText::shape() const {
 			break;
 		case 1:
 			displayData->title = "Warning at";
-			displayData->value = "---";
+			displayData->value = (mWarning > 0) ? QString::number(mWarning) : "---";
 			displayData->unit = "mph";
 			displayData->rangeText = "";
 			break;
@@ -113,21 +112,32 @@ QPainterPath DisplayText::shape() const {
 			break;
 	}
 	path.addPath(addText(tempPath, f, 16, 150, 85, displayData->title, true));
-	path.addPath(addText(tempPath, f, 55, 190, 250, displayData->value, false));
-	path.addPath(addTextNoTranslate(tempPath, f, 15, 200, 250, displayData->unit));
-	path.addPath(addTextNoTranslate(tempPath, f, 15, 25, 350, displayData->rangeText));
+	path.addPath(addText(tempPath, f, 65, 215, 230, displayData->value, false));
+	path.addPath(addTextNoTranslate(tempPath, f, 15, 225, 230, displayData->unit));
+	path.addPath(addTextNoTranslate(tempPath, f, 15, 25, 255, displayData->rangeText));
+	path.addPath(addTextNoTranslate(tempPath, f, 15, 275, 30, gearTextArr[mGear]));
+	path.addPath(addText(tempPath, f, 19, 275, 370, QString::number(mTrip, 'f', 1), false));
+	path.addPath(addTextNoTranslate(tempPath, f, 19, 25, 370, QString::number(mCompTrip)));
+	f.setWeight(QFont::Normal);
+	path.addPath(addText(tempPath, f, 20, 150, 305, QString::number(mTemp, 'f', 1) , true));
+	path.addPath(addTextNoTranslate(tempPath, f, 13,  mRightPos + 5, 305, "°C"));
+	path.addPath(addTextNoTranslate(tempPath, f, 12, 250, 345, "trip"));
+	path.addPath(addTextNoTranslate(tempPath, f, 12, 25, 345, "mi"));
 	path.translate(mX, mY);
 	return path;
 }
 
-QPainterPath DisplayText::addText(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t, bool o) {
+QPainterPath DisplayText::addText(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t, bool o)  {
+	path.clear();
 	f.setPointSize(pt);
 	path.addText(x, y, f, t);
 	path.translate(o?-path.boundingRect().width()/2:-path.boundingRect().width(), 0);
+	DisplayText::mRightPos = path.boundingRect().right();
 	return path;
 }
 
-QPainterPath DisplayText::addTextNoTranslate(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t) {
+QPainterPath DisplayText::addTextNoTranslate(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t)  {
+	path.clear();
 	f.setPointSize(pt);
 	path.addText(x, y, f, t);
 	return path;
@@ -187,7 +197,7 @@ void DisplayTime::updateTime() {
 
 QPainterPath DisplayTime::shape() const {
 	QPainterPath path;
-	path.addText(225, 30, QFont("Dubai", 15, QFont::DemiBold), time.toString("HH:mm"));
+	path.addText(15, 30, QFont("Dubai", 15, QFont::DemiBold), time.toString("HH:mm"));
 	path.translate(mX, mY);
 	return path;
 }
