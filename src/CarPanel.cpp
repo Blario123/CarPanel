@@ -52,7 +52,10 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 
 	layout->addWidget(view, 0, 0);
 	
-	QFontDatabase::addApplicationFont("qrc:///resouces/CEROM.otf");
+	int returnId = QFontDatabase::addApplicationFont(":/resources/Font/WorkSans-VariableFont_wght-VF.otf");
+	if(returnId == -1) {
+		qDebug() << "Font failed to load";
+	}
 	
 	layout->addWidget(ctrl, 1, 0);
     setLayout(layout);

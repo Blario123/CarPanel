@@ -1,12 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>resources/CarPanel.qss</file>
-        <file>resources/Display.qss</file>
-        <file>resources/outline.svg</file>
         <file>resources/outline.png</file>
         <file>resources/Logo.png</file>
-        <file>resources/Main.qss</file>
-        <file>resources/DisplayTop.qss</file>
-        <file>resources/CEROM.otf</file>
+        <file>resources/Font/WorkSans-VariableFont_wght-VF.otf</file>
     </qresource>
 </RCC>

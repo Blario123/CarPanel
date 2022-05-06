@@ -12,6 +12,8 @@
 #include <QPainterPath>
 #include <QTimer>
 #include <QTime>
+#include <QFont>
+#include <QFontMetricsF>
 
 class DisplayLogo;
 class DisplayBorder;
@@ -124,6 +126,7 @@ public slots:
 	void setValueRange(int);
 private:
 	static QPainterPath addText(QPainterPath, QFont, int, qreal, qreal, const QString&, bool);
+	static QPainterPath addValue(QPainterPath, QFont, int, qreal, qreal, const QString&, bool);
 	static QPainterPath addTextNoTranslate(QPainterPath, QFont, int, qreal, qreal, const QString&);
 	typedef struct pageData {
 		QString title,
@@ -131,7 +134,6 @@ private:
 				unit,
 				rangeText;
 	} data;
-	
 	data *displayData = new data;
 	qreal 	mX = 0,
 			mY = 0,
@@ -144,6 +146,7 @@ private:
 			mCompTrip = 0,
 			mRange = 0,
 			mTemp = 0;
+	int valuePt = 65;
 	inline static qreal mRightPos;
 private:
 	// Arrays for display values. 0: since start, 1: since refuel, 2: long term

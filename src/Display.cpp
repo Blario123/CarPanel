@@ -2,6 +2,7 @@
 // Created by Blair on 01/10/2021.
 //
 
+#include <QRawFont>
 #include "../include/Display.h"
 
 //<editor-fold desc="Display">
@@ -48,7 +49,10 @@ void DisplayMain::showDisplay() {
 //<editor-fold desc="DisplayText">
 QPainterPath DisplayText::shape() const {
 	QPainterPath path, tempPath;
-	QFont f("Dubai", QFont::Bold);
+	QFont f("CarPanel");
+	f.setKerning(false);
+	f.setFixedPitch(true);
+	f.setPointSize(20);
 	switch(page) {
 		case 0:
 			displayData->title = "";
@@ -112,13 +116,12 @@ QPainterPath DisplayText::shape() const {
 			break;
 	}
 	path.addPath(addText(tempPath, f, 16, 150, 85, displayData->title, true));
-	path.addPath(addText(tempPath, f, 65, 215, 230, displayData->value, false));
+	path.addPath(addValue(tempPath, f, valuePt, 215, 230, displayData->value, false));
 	path.addPath(addTextNoTranslate(tempPath, f, 15, 225, 230, displayData->unit));
 	path.addPath(addTextNoTranslate(tempPath, f, 15, 25, 255, displayData->rangeText));
 	path.addPath(addTextNoTranslate(tempPath, f, 15, 275, 30, gearTextArr[mGear]));
 	path.addPath(addText(tempPath, f, 19, 275, 370, QString::number(mTrip, 'f', 1), false));
 	path.addPath(addTextNoTranslate(tempPath, f, 19, 25, 370, QString::number(mCompTrip)));
-	f.setWeight(QFont::Normal);
 	path.addPath(addText(tempPath, f, 20, 150, 305, QString::number(mTemp, 'f', 1) , true));
 	path.addPath(addTextNoTranslate(tempPath, f, 13,  mRightPos + 5, 305, "°C"));
 	path.addPath(addTextNoTranslate(tempPath, f, 12, 250, 345, "trip"));
@@ -131,8 +134,19 @@ QPainterPath DisplayText::addText(QPainterPath path, QFont f, int pt, qreal x, q
 	path.clear();
 	f.setPointSize(pt);
 	path.addText(x, y, f, t);
-	path.translate(o?-path.boundingRect().width()/2:-path.boundingRect().width(), 0);
-	DisplayText::mRightPos = path.boundingRect().right();
+	path.translate((o) ? -path.boundingRect().width()/2 : -path.boundingRect().width(), 0);
+	mRightPos = path.boundingRect().right();
+	return path;
+}
+
+QPainterPath DisplayText::addValue(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t, bool o)  {
+	path.clear();
+	f.setPointSize(pt);
+	QFontMetrics fm(f);
+ 	int hzAdv = fm.horizontalAdvance(QString::number(0));
+	path.addText(x, y, f, t);
+	path.translate((qreal) -t.length() * hzAdv, 0);
+	mRightPos = (qreal) t.length() * hzAdv;
 	return path;
 }
 
@@ -168,6 +182,7 @@ void DisplayText::setSpeed(qreal speed) {
 
 void DisplayText::setPage(int p) {
 	this->page = p;
+	valuePt = (p == 0) ? 65 : 45;
 	update();
 }
 
@@ -197,7 +212,7 @@ void DisplayTime::updateTime() {
 
 QPainterPath DisplayTime::shape() const {
 	QPainterPath path;
-	path.addText(15, 30, QFont("Dubai", 15, QFont::DemiBold), time.toString("HH:mm"));
+	path.addText(15, 30, QFont("CarPanel", 15), time.toString("HH:mm"));
 	path.translate(mX, mY);
 	return path;
 }

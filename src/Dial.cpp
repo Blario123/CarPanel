@@ -113,7 +113,7 @@ QPainterPath DialText::shape() const {
 	for(int i = 0; i < mText.size(); i++) {
 		majAngle = -130 + (i * dAMaj);
 		tempPoint = QPointF(mRadius * sin(qDegreesToRadians(majAngle)), mRadius * -cos(qDegreesToRadians(majAngle)));
-		tempPath.addText(tempPoint, QFont("CEROM", 15), mText[i]);
+		tempPath.addText(tempPoint, QFont("CarPanel", 15), mText[i]);
 		tempPath.translate(-tempPath.boundingRect().width() / 2, 0);
 		tempPath = QTransform().translate(mRadius * sin(qDegreesToRadians(majAngle)), mRadius * -cos(qDegreesToRadians(majAngle))).rotate(majAngle).translate(mRadius * -sin(qDegreesToRadians(majAngle)), mRadius * cos(qDegreesToRadians(majAngle))).map(tempPath);
 		path.addPath(tempPath);
