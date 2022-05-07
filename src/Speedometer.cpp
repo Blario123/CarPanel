@@ -1,11 +1,8 @@
-//
-// Created by Blair on 02/10/2021.
-//
-
 #include "../include/Speedometer.h"
 
-Speedometer::Speedometer(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
-	dial = new Dial(this);
+Speedometer::Speedometer(QGraphicsItem *parent) : 	QGraphicsItem(parent),
+													QObject(), 
+													dial(new Dial) {
 	dial->setPosition(1275, 375);
 	dial->setIncrements(8.5, 3);
 	dial->text->setText({"0", "20", "40", "60", "80", "100", "120", "140"});

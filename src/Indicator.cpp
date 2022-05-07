@@ -1,7 +1,3 @@
-//
-// Created by Blair on 03/10/2021.
-//
-
 #include <QPainter>
 #include <QPainterPath>
 #include "../include/Indicator.h"

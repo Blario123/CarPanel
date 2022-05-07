@@ -1,7 +1,3 @@
-//
-// Created by Blair on 03/10/2021.
-//
-
 #ifndef CARPANEL_INDICATOR_H
 #define CARPANEL_INDICATOR_H
 
@@ -14,8 +10,8 @@ class Indicator : public QObject, public QGraphicsItem {
 public:
 	explicit Indicator(QGraphicsItem *parent = nullptr);
 	~Indicator() override = default;
-	QRectF boundingRect() const override { return {}; }
-	QPainterPath shape() const override;
+	[[nodiscard]] QRectF boundingRect() const override { return {}; }
+	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 public slots:

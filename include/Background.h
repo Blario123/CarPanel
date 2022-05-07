@@ -1,7 +1,3 @@
-//
-// Created by Blair on 23/11/2021.
-//
-
 #ifndef CARPANEL_BACKGROUND_H
 #define CARPANEL_BACKGROUND_H
 

@@ -28,9 +28,9 @@ Control::Control(QWidget *parent) : QWidget(parent),
 	spinBox->setRange(0, 8);
 	spinBox->setWrapping(true);
 	
-	connect(speedSlider, SIGNAL(valueChanged(int)), this, SLOT(setSpeed(int)));
-	connect(revSlider, SIGNAL(valueChanged(int)), this, SLOT(setRev(int)));
-	connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(processPage(int)));
+	connect(speedSlider, &QSlider::valueChanged, this, &Control::setSpeed);
+	connect(revSlider, &QSlider::valueChanged, this, &Control::setRev);
+	connect(spinBox, &QSpinBox::valueChanged, this, &Control::processPage);
 	
 	gridBox->addWidget(speedLabel, 0, 0);
 	gridBox->addWidget(speedLineEdit, 0, 1);

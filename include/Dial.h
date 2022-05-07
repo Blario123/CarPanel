@@ -1,7 +1,3 @@
-//
-// Created by Blair on 02/10/2021.
-//
-
 #ifndef CARPANEL_DIAL_H
 #define CARPANEL_DIAL_H
 
@@ -24,12 +20,9 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit Dial(QGraphicsItem *parent = nullptr);
 	~Dial() override;
-	QRectF boundingRect() const override;
-	QPainterPath shape() const override;
+	[[nodiscard]] QRectF boundingRect() const override;
+	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-	void setPosition(qreal, qreal);
-	void setIncrements(qreal, qreal);
-	void setAngle(qreal);
 	DialOuter *outer;
 	DialNeedle *needle;
 	DialIncrements *increments;
@@ -39,6 +32,9 @@ signals:
 	void positionChanged(qreal, qreal);
 	void incrementsChanged(qreal, qreal);
 public slots:
+	void setPosition(qreal, qreal);
+	void setIncrements(qreal, qreal);
+	void setAngle(qreal);
 private:
 	qreal mx;
 	qreal my;
@@ -50,16 +46,17 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit DialOuter(QGraphicsItem *parent = nullptr);
 	~DialOuter() override;
-	QRectF boundingRect() const override;
-	QPainterPath shape() const override;
+	[[nodiscard]] QRectF boundingRect() const override;
+	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-	void setRadius(qreal r);
 private:
 	qreal radius = 275;
 	qreal mx;
 	qreal my;
 public slots:
-	void setPosition(qreal, qreal);
+	
+	[[maybe_unused]] void setRadius(const qreal &);
+	void setPosition(const qreal &, const qreal &);
 };
 
 class DialText : public QObject, public QGraphicsItem {
@@ -68,15 +65,18 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit DialText(QGraphicsItem *parent = nullptr);
 	~DialText() override;
-	QRectF boundingRect() const override;
-	QPainterPath shape() const override;
+	[[nodiscard]] QRectF boundingRect() const override;
+	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 public slots:
-	void setPosition(qreal, qreal);
-	void setText(QList<QString>);
-	void setIncrements(qreal, qreal);
+	void setPosition(const qreal &, const qreal &);
+	void setText(const QList<QString> &);
+	void setIncrements(const qreal &);
 private:
-	qreal mX, mY, mRadius = 235, mMajorIncrements;
+	qreal mX;
+	qreal mY;
+	qreal mRadius;
+	qreal mMajorIncrements;
 	QList<QString> mText;
 };
 
@@ -86,8 +86,8 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit DialIncrements(QGraphicsItem *parent = nullptr);
 	~DialIncrements() override;
-	QRectF boundingRect() const override;
-	QPainterPath shape() const override;
+	[[nodiscard]] QRectF boundingRect() const override;
+	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 private:
 	QPainterPath redPath;
@@ -96,11 +96,12 @@ private:
 	qreal mY;
 	qreal mMajor;
 	qreal mMinor;
-	qreal mRadius = 225;
+	qreal mRadius;
 public slots:
-	void setPosition(qreal, qreal);
-	void setIncrements(qreal, qreal);
-	void setRadius(qreal);
+	void setPosition(const qreal &, const qreal &);
+	void setIncrements(const qreal &, const qreal &);
+	
+	[[maybe_unused]] void setRadius(const qreal &);
 };
 
 class DialNeedle : public QObject, public QGraphicsItem {
@@ -109,20 +110,20 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit DialNeedle(QGraphicsItem *parent = nullptr);
 	~DialNeedle() override;
-	QRectF boundingRect() const override;
-	QPainterPath shape() const override;
+	[[nodiscard]] QRectF boundingRect() const override;
+	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 private:
 	qreal mX;
 	qreal mY;
-	qreal mRadius = 225;
-	qreal mAngle = 0;
+	qreal mRadius;
+	qreal mAngle;
 	qreal mAngleLimit;
 public slots:
-	void setPosition(qreal, qreal);
-	void setAngle(qreal);
-	void setAngleLimit(qreal);
+	void setPosition(const qreal &, const qreal &);
+	void setAngle(const qreal &);
+	void setAngleLimit(const qreal &);
 };
 
 #endif // CARPANEL_DIAL_H

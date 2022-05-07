@@ -2,6 +2,6 @@
     <qresource prefix="/">
         <file>resources/outline.png</file>
         <file>resources/Logo.png</file>
-        <file>resources/Font/WorkSans-VariableFont_wght-VF.otf</file>
+        <file>resources/CarPanel.otf</file>
     </qresource>
 </RCC>

@@ -1,13 +1,12 @@
-//
-// Created by Blair on 01/10/2021.
-//
-
 #ifndef CARPANEL_CARPANEL_H
 #define CARPANEL_CARPANEL_H
 
 #include <QGraphicsView>
 #include <QTimer>
 #include <QFontDatabase>
+#include <QMouseEvent>
+#include <QAction>
+
 #include "Control.h"
 #include "Display.h"
 #include "RevCounter.h"
@@ -27,9 +26,12 @@ public:
 	Control *ctrl;
 	Indicator *leftInd;
 	Indicator *rightInd;
-
+	QGraphicsScene *scene;
+	QGraphicsView *view;
+	Background *background;
 private:
     QGridLayout *layout;
+	QAction *showControl;
 signals:
 	void toggleLInd();
 	void toggleRInd();

@@ -1,31 +1,26 @@
-//
-// Created by Blair on 01/10/2021.
-//
-
 #include "include/CarPanel.h"
 
-CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
-    this->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
-    this->setGeometry(0, 0, 1600, 920);
+CarPanel::CarPanel(QWidget *parent) : 	QWidget(parent),
+										left(new RevCounter),
+										right(new Speedometer),
+										center(new DisplayMain),
+										ctrl(new Control),
+										leftInd(new Indicator),
+										rightInd(new Indicator),
+										layout(new QGridLayout),
+										scene(new QGraphicsScene),
+										view(new QGraphicsView),
+										background(new Background),
+										showControl(new QAction) {
+    setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
+    setGeometry(0, 0, 1600, 920);
 
-	layout = new QGridLayout;
 	layout->setContentsMargins(0, 0, 0 , 0);
-	
-	auto *scene = new QGraphicsScene;
-	auto *view = new QGraphicsView;
-	auto *background = new Background;
-	
-	ctrl = new Control;
-	left = new RevCounter;
-    right = new Speedometer;
-	leftInd = new Indicator;
-	rightInd = new Indicator;
 	
 	leftInd->setPosition(500, 75);
 	rightInd->setPosition(1036, 75);
 	rightInd->toggleOrientation();
 	
-	center = new DisplayMain;
 	center->setPosition(650, 100);
 	
 	left->dial->needle->setAngleLimit(ctrl->revSlider->maximum());
@@ -52,7 +47,7 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 
 	layout->addWidget(view, 0, 0);
 	
-	int returnId = QFontDatabase::addApplicationFont(":/resources/Font/WorkSans-VariableFont_wght-VF.otf");
+	int returnId = QFontDatabase::addApplicationFont(":/resources/CarPanel.otf");
 	if(returnId == -1) {
 		qDebug() << "Font failed to load";
 	}
@@ -60,16 +55,21 @@ CarPanel::CarPanel(QWidget *parent) : QWidget(parent) {
 	layout->addWidget(ctrl, 1, 0);
     setLayout(layout);
 	
-	connect(ctrl, SIGNAL(speedChanged(qreal)), this->right->dial->needle, SLOT(setAngle(qreal)));
-	connect(ctrl, SIGNAL(speedChanged(qreal)), this->center->text, SLOT(setSpeed(qreal)));
-	connect(ctrl, SIGNAL(revChanged(qreal)), this->left->dial->needle, SLOT(setAngle(qreal)));
-	connect(ctrl, SIGNAL(pageChanged(int)), this->center->text, SLOT(setPage(int)));
-	connect(ctrl, SIGNAL(closeSignal()), this, SLOT(deleteLater()));
-	connect(this, SIGNAL(toggleLInd()), leftInd, SLOT(toggle()));
-	connect(this, SIGNAL(toggleRInd()), rightInd, SLOT(toggle()));
+	connect(ctrl, &Control::speedChanged, this->right->dial->needle, &DialNeedle::setAngle);
+	connect(ctrl, &Control::speedChanged, this->center->text, &DisplayText::setSpeed);
+	connect(ctrl, &Control::revChanged, this->left->dial->needle, &DialNeedle::setAngle);
+	connect(ctrl, &Control::pageChanged, this->center->text, &DisplayText::setPage);
+	connect(ctrl, &Control::closeSignal, this, &QWidget::deleteLater);
+	connect(this, &CarPanel::toggleLInd, leftInd, &Indicator::toggle);
+	connect(this, &CarPanel::toggleRInd, rightInd, &Indicator::toggle);
 }
 
 void CarPanel::mousePressEvent(QMouseEvent *event) {
-	emit toggleLInd();
-	emit toggleRInd();
+	if(event->button() == Qt::LeftButton) {
+		emit toggleLInd();
+		emit toggleRInd();
+	}
+	if(event->button() == Qt::RightButton) {
+	
+	}
 }

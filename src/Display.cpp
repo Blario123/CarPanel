@@ -1,30 +1,24 @@
-//
-// Created by Blair on 01/10/2021.
-//
-
-#include <QRawFont>
 #include "../include/Display.h"
 
 //<editor-fold desc="Display">
-DisplayMain::DisplayMain(QGraphicsItem *parent) : QObject(), QGraphicsItem(parent) {
-	logo = new DisplayLogo(this);
-	border = new DisplayBorder(this);
-	text = new DisplayText(this);
-	time = new DisplayTime(this);
-	
+DisplayMain::DisplayMain(QGraphicsItem *parent) : 	QGraphicsItem(parent),
+													QObject(),
+													logo(new DisplayLogo(this)),
+													border(new DisplayBorder(this)),
+													text(new DisplayText(this)),
+													time(new DisplayTime(this)),
+													timer(new QTimer(this)) {
 	text->setZValue(1);
-	
-	auto *timer = new QTimer(this);
 	
 	connect(timer, &QTimer::timeout, logo, &DisplayLogo::hideLogo);
 	connect(timer, &QTimer::timeout, text, &DisplayText::showText);
 	connect(timer, &QTimer::timeout, border, &DisplayBorder::showBorder);
 	connect(timer, &QTimer::timeout, time, &DisplayTime::showTime);
 	
-	connect(this, SIGNAL(positionChanged(qreal,qreal)), border, SLOT(setPosition(qreal,qreal)));
-	connect(this, SIGNAL(positionChanged(qreal,qreal)), logo, SLOT(setPosition(qreal,qreal)));
-	connect(this, SIGNAL(positionChanged(qreal,qreal)), text, SLOT(setPosition(qreal,qreal)));
-	connect(this, SIGNAL(positionChanged(qreal,qreal)), time, SLOT(setPosition(qreal,qreal)));
+	connect(this, &DisplayMain::positionChanged, border, &DisplayBorder::setPosition);
+	connect(this, &DisplayMain::positionChanged, logo, &DisplayLogo::setPosition);
+	connect(this, &DisplayMain::positionChanged, text, &DisplayText::setPosition);
+	connect(this, &DisplayMain::positionChanged, time, &DisplayTime::setPosition);
 	
 	timer->setSingleShot(true);
 	timer->start(2000);
@@ -41,7 +35,7 @@ void DisplayMain::setPosition(qreal x, qreal y) {
 	emit(positionChanged(x, y));
 }
 
-void DisplayMain::showDisplay() {
+[[maybe_unused]] [[maybe_unused]] void DisplayMain::showDisplay() {
 	show();
 }
 //</editor-fold>
@@ -139,7 +133,8 @@ QPainterPath DisplayText::addText(QPainterPath path, QFont f, int pt, qreal x, q
 	return path;
 }
 
-QPainterPath DisplayText::addValue(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t, bool o)  {
+QPainterPath DisplayText::addValue(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t, bool o) {
+	Q_UNUSED(o)
 	path.clear();
 	f.setPointSize(pt);
 	QFontMetrics fm(f);
@@ -167,7 +162,7 @@ void DisplayText::showText() {
 	show();
 }
 
-void DisplayText::hideText() {
+[[maybe_unused]] void DisplayText::hideText() {
 	hide();
 }
 
@@ -186,7 +181,7 @@ void DisplayText::setPage(int p) {
 	update();
 }
 
-void DisplayText::setValueRange(int vr) {
+[[maybe_unused]] void DisplayText::setValueRange(int vr) {
 	this->mValueRange = vr;
 	update();
 }
@@ -227,7 +222,7 @@ void DisplayTime::showTime() {
 	show();
 }
 
-void DisplayTime::hideTime() {
+[[maybe_unused]] void DisplayTime::hideTime() {
 	hide();
 }
 

@@ -1,7 +1,3 @@
-//
-// Created by Blair on 02/10/2021.
-//
-
 #ifndef CARPANEL_REVCOUNTER_H
 #define CARPANEL_REVCOUNTER_H
 
@@ -15,15 +11,14 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit RevCounter(QGraphicsItem *parent = nullptr);
 	~RevCounter() override;
-	QRectF boundingRect() const override;
-	QPainterPath shape() const override;
-	
+	[[nodiscard]] QRectF boundingRect() const override;
+	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 	Dial *dial;
 
 private:
 public slots:
-	void setRev(qreal);
+	[[maybe_unused]] void setRev(qreal) const;
 };
 
 #endif // CARPANEL_REVCOUNTER_H

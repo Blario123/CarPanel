@@ -1,23 +1,20 @@
-//
-// Created by Blair on 02/10/2021.
-//
-
 #include "../include/Dial.h"
 
-#include <utility>
-
 //<editor-fold desc="Dial">
-Dial::Dial(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
-	outer = new DialOuter(this);
-	increments = new DialIncrements(this);
-	needle = new DialNeedle(this);
-	text = new DialText(this);
-	connect(this, SIGNAL(positionChanged(qreal,qreal)), outer, SLOT(setPosition(qreal,qreal)));
-	connect(this, SIGNAL(positionChanged(qreal,qreal)), needle, SLOT(setPosition(qreal,qreal)));
-	connect(this, SIGNAL(positionChanged(qreal,qreal)), increments, SLOT(setPosition(qreal,qreal)));
-	connect(this, SIGNAL(positionChanged(qreal,qreal)), text, SLOT(setPosition(qreal,qreal)));
-	connect(this, SIGNAL(incrementsChanged(qreal,qreal)), increments, SLOT(setIncrements(qreal,qreal)));
-	connect(this, SIGNAL(incrementsChanged(qreal,qreal)), text, SLOT(setIncrements(qreal,qreal)));
+Dial::Dial(QGraphicsItem *parent) : QGraphicsItem(parent),
+									QObject(),
+									mx(0),
+									my(0),
+									outer(new DialOuter(this)),
+									increments(new DialIncrements(this)),
+									needle(new DialNeedle(this)),
+									text(new DialText(this)) {
+	connect(this, &Dial::positionChanged, outer, &DialOuter::setPosition);
+	connect(this, &Dial::positionChanged, needle, &DialNeedle::setPosition);
+	connect(this, &Dial::positionChanged, increments, &DialIncrements::setPosition);
+	connect(this, &Dial::positionChanged, text, &DialText::setPosition);
+	connect(this, &Dial::incrementsChanged, increments, &DialIncrements::setIncrements);
+	connect(this, &Dial::incrementsChanged, text, &DialText::setIncrements);
 }
 
 void Dial::setPosition(qreal x, qreal y) {
@@ -84,19 +81,25 @@ void DialOuter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 	painter->drawPath(shape());
 }
 
-void DialOuter::setRadius(qreal r) {
+[[maybe_unused]] void DialOuter::setRadius(const qreal &r) {
 	radius = r;
 	this->update();
 }
 
-void DialOuter::setPosition(qreal x, qreal y) {
+void DialOuter::setPosition(const qreal &x, const qreal &y) {
 	this->mx = x;
 	this->my = y;
 }
 //</editor-fold>
 
 //<editor-fold desc="DialText">
-DialText::DialText(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
+DialText::DialText(QGraphicsItem *parent) : QGraphicsItem(parent),
+											QObject(),
+											mX(0),
+											mY(0),
+											mRadius(235),
+											mMajorIncrements(0),
+											mText(nullptr) {
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -109,7 +112,7 @@ QRectF DialText::boundingRect() const {
 QPainterPath DialText::shape() const {
 	QPainterPath path, tempPath;
 	QPointF tempPoint;
-	qreal majAngle, dAMaj = 260 / (mText.size() - ((mMajorIncrements == mText.size()) ? 1 : 0.5));
+	qreal majAngle, dAMaj = 260 /  ((qreal) mText.size() - ((mMajorIncrements == (qreal) mText.size()) ? 1 : 0.5));
 	for(int i = 0; i < mText.size(); i++) {
 		majAngle = -130 + (i * dAMaj);
 		tempPoint = QPointF(mRadius * sin(qDegreesToRadians(majAngle)), mRadius * -cos(qDegreesToRadians(majAngle)));
@@ -123,12 +126,12 @@ QPainterPath DialText::shape() const {
 	return path;
 }
 
-void DialText::setPosition(qreal x, qreal y) {
+void DialText::setPosition(const qreal &x, const qreal &y) {
 	this->mX = x;
 	this->mY = y;
 }
 
-void DialText::setText(QList<QString> text) {
+void DialText::setText(const QList<QString> &text) {
 	this->mText = text;
 }
 
@@ -138,13 +141,21 @@ void DialText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 	painter->drawPath(shape());
 }
 
-void DialText::setIncrements(qreal major, qreal minor) {
+void DialText::setIncrements(const qreal &major) {
 	this->mMajorIncrements = major;
+
 }
 //</editor-fold>
 
 //<editor-fold desc="DialIncrements">
-DialIncrements::DialIncrements(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mX(0), mY(0) {
+DialIncrements::DialIncrements(QGraphicsItem *parent) : QGraphicsItem(parent),
+														QObject(),
+														doLastLine(false),
+														mX(0),
+														mY(0),
+														mMajor(0),
+														mMinor(0),
+														mRadius(225) {
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -183,12 +194,12 @@ QPainterPath DialIncrements::shape() const {
 	return path;
 }
 
-void DialIncrements::setPosition(qreal x, qreal y) {
+void DialIncrements::setPosition(const qreal &x, const qreal &y) {
 	this->mX = x;
 	this->mY = y;
 }
 
-void DialIncrements::setRadius(qreal radius) {
+[[maybe_unused]] void DialIncrements::setRadius(const qreal &radius) {
 	this->mRadius = radius;
 }
 
@@ -197,7 +208,7 @@ void DialIncrements::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 	painter->drawPath(shape());
 }
 
-void DialIncrements::setIncrements(qreal major, qreal minor) {
+void DialIncrements::setIncrements(const qreal &major, const qreal &minor) {
 	this->mMajor = major;
 	if(fmod(mMajor, 1) != 0) {
 		this->mMajor -= fmod(major, 1);
@@ -210,7 +221,13 @@ void DialIncrements::setIncrements(qreal major, qreal minor) {
 //</editor-fold>
 
 //<editor-fold desc="DialNeedle">
-DialNeedle::DialNeedle(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mX(0), mY(0) {
+DialNeedle::DialNeedle(QGraphicsItem *parent) : QGraphicsItem(parent),
+												QObject(),
+												mX(0),
+												mY(0),
+												mRadius(225),
+												mAngle(0),
+												mAngleLimit(0) {
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -241,30 +258,21 @@ QPainterPath DialNeedle::shape() const {
 
 void DialNeedle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 	painter->setBrush(Qt::white);
-	if(0) {
-		QLinearGradient grad;
-		grad.setColorAt(0.2, Qt::black);
-		grad.setColorAt(0.8, Qt::white);
-		grad.setStart(mX-mRadius, mY-mRadius);
-		grad.setFinalStop(mX+mRadius, mY+mRadius);
-		painter->setBrush(QBrush(grad));
-	} else {
-		painter->setPen(Qt::white);
-	}
+	painter->setPen(Qt::white);
 	painter->drawPath(shape());
 }
 
-void DialNeedle::setPosition(qreal x, qreal y) {
+void DialNeedle::setPosition(const qreal &x, const qreal &y) {
 	this->mX = x;
 	this->mY = y;
 }
 
-void DialNeedle::setAngle(qreal angle) {
+void DialNeedle::setAngle(const qreal &angle) {
 	this->mAngle = angle;
 	update();
 }
 
-void DialNeedle::setAngleLimit(qreal limit) {
+void DialNeedle::setAngleLimit(const qreal &limit) {
 	this->mAngleLimit = limit;
 }
 //</editor-fold>
