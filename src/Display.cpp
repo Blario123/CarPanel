@@ -1,13 +1,16 @@
 #include "../include/Display.h"
 
 //<editor-fold desc="Display">
-DisplayMain::DisplayMain(QGraphicsItem *parent) : 	QGraphicsItem(parent),
+DisplayMain::DisplayMain(const QString &name,QGraphicsItem *parent) : 	QGraphicsItem(parent),
 													QObject(),
-													logo(new DisplayLogo(this)),
-													border(new DisplayBorder(this)),
-													text(new DisplayText(this)),
-													time(new DisplayTime(this)),
+													logo(new DisplayLogo(name + "::Logo", this)),
+													border(new DisplayBorder(name + "::Border", this)),
+													text(new DisplayText(name + "::Text", this)),
+													time(new DisplayTime(name + "::Time", this)),
 													timer(new QTimer(this)) {
+#ifdef CPDEBUG
+	qDebug() << name;
+#endif
 	text->setZValue(1);
 	
 	connect(timer, &QTimer::timeout, logo, &DisplayLogo::hideLogo);
@@ -189,7 +192,10 @@ void DisplayText::setPage(int p) {
 //</editor-fold>
 
 //<editor-fold desc="DisplayTime">
-DisplayTime::DisplayTime(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
+DisplayTime::DisplayTime(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
+#ifdef CPDEBUG
+	qDebug() << name;
+#endif
 	hide();
 	time = QTime::currentTime();
 	auto *timer = new QTimer(this);

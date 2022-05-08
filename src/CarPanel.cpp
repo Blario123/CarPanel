@@ -1,17 +1,20 @@
 #include "include/CarPanel.h"
 
-CarPanel::CarPanel(QWidget *parent) : 	QWidget(parent),
-										left(new RevCounter),
-										right(new Speedometer),
-										center(new DisplayMain),
-										ctrl(new Control),
-										leftInd(new Indicator),
-										rightInd(new Indicator),
+CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
+										left(new RevCounter("RevCounter")),
+										right(new Speedometer("Speedometer")),
+										center(new DisplayMain("Display")),
+										ctrl(new Control("Control")),
+										leftInd(new Indicator("LeftIndicator")),
+										rightInd(new Indicator("RightIndicator")),
 										layout(new QGridLayout),
 										scene(new QGraphicsScene),
 										view(new QGraphicsView),
 										background(new Background),
 										showControl(new QAction) {
+#ifdef CPDEBUG
+	qDebug() << name;
+#endif
     setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
     setGeometry(0, 0, 1600, 920);
 

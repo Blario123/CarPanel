@@ -11,7 +11,7 @@
 class Control : public QWidget {
 Q_OBJECT
 public:
-	explicit Control(QWidget *parent = nullptr);
+	explicit Control(const QString &,QWidget *parent = nullptr);
 	~Control() override;
 	QSlider *speedSlider;
 	QSlider *revSlider;

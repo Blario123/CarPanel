@@ -1,6 +1,6 @@
 #include "include/Control.h"
 
-Control::Control(QWidget *parent) : QWidget(parent),
+Control::Control(const QString &name,QWidget *parent) : QWidget(parent),
 									gridBox(new QGridLayout),
 									speedLineEdit(new QLineEdit),
 									revLineEdit(new QLineEdit),
@@ -11,6 +11,9 @@ Control::Control(QWidget *parent) : QWidget(parent),
 									speedSlider(new QSlider),
 									revSlider(new QSlider),
 									spinBox(new QSpinBox) {
+#ifdef CPDEBUG
+	qDebug() << name;
+#endif
 	speedLineEdit->setText(QString::number(speedSlider->value()));
 	revLineEdit->setText(QString::number(revSlider->value()));
 	

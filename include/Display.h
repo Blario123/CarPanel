@@ -20,7 +20,7 @@ class DisplayMain : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-    explicit DisplayMain(QGraphicsItem *parent = nullptr);
+    explicit DisplayMain(const QString &,QGraphicsItem *parent = nullptr);
     ~DisplayMain() override = default;
 	[[nodiscard]] QRectF boundingRect() const override { return {}; }
 	[[nodiscard]] QPainterPath shape() const override;
@@ -42,7 +42,7 @@ class DisplayLogo : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DisplayLogo(QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() {
+	explicit DisplayLogo(const QString &,QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() {
 		show();
 	};
 	~DisplayLogo() override = default;
@@ -78,7 +78,7 @@ class DisplayBorder : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DisplayBorder(QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() { hide(); };
+	explicit DisplayBorder(const QString &,QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() { hide(); };
 	~DisplayBorder() override = default;
 	[[nodiscard]] QRectF boundingRect() const override { return {}; }
 	[[nodiscard]] QPainterPath shape() const override {
@@ -116,7 +116,7 @@ class DisplayText : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DisplayText(QGraphicsItem *parent = nullptr) : QGraphicsItem(parent),
+	explicit DisplayText(const QString &,QGraphicsItem *parent = nullptr) : QGraphicsItem(parent),
 															QObject(),
 															displayData(new data),
 															mX(0),
@@ -189,7 +189,7 @@ class DisplayTime : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DisplayTime(QGraphicsItem *parent = nullptr);
+	explicit DisplayTime(const QString &,QGraphicsItem *parent = nullptr);
 	~DisplayTime() override = default;
 	[[nodiscard]] QRectF boundingRect() const override { return {}; }
 	[[nodiscard]] QPainterPath shape() const override;

@@ -9,7 +9,7 @@ class Speedometer : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit Speedometer(QGraphicsItem *parent = nullptr);
+	explicit Speedometer(const QString &,QGraphicsItem *parent = nullptr);
 	~Speedometer() override;
 	[[nodiscard]] QRectF boundingRect() const override;
 	[[nodiscard]] QPainterPath shape() const override;

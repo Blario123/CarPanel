@@ -1,14 +1,18 @@
 #include "../include/Dial.h"
 
 //<editor-fold desc="Dial">
-Dial::Dial(QGraphicsItem *parent) : QGraphicsItem(parent),
+Dial::Dial(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent),
 									QObject(),
 									mx(0),
 									my(0),
-									outer(new DialOuter(this)),
-									increments(new DialIncrements(this)),
-									needle(new DialNeedle(this)),
-									text(new DialText(this)) {
+									outer(new DialOuter(name + "::Outer", this)),
+									increments(new DialIncrements(name + "::Increments", this)),
+									needle(new DialNeedle(name + "::Needle", this)),
+									text(new DialText(name + "::Text", this)) {
+#ifdef CPDEBUG
+	qDebug() << name;
+#endif
+	
 	connect(this, &Dial::positionChanged, outer, &DialOuter::setPosition);
 	connect(this, &Dial::positionChanged, needle, &DialNeedle::setPosition);
 	connect(this, &Dial::positionChanged, increments, &DialIncrements::setPosition);
@@ -59,7 +63,7 @@ Dial::~Dial() = default;
 //</editor-fold>
 
 //<editor-fold desc="DialOuter">
-DialOuter::DialOuter(QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
+DialOuter::DialOuter(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent), QObject(), mx(0), my(0) {
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -89,17 +93,21 @@ void DialOuter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 void DialOuter::setPosition(const qreal &x, const qreal &y) {
 	this->mx = x;
 	this->my = y;
+	update();
 }
 //</editor-fold>
 
 //<editor-fold desc="DialText">
-DialText::DialText(QGraphicsItem *parent) : QGraphicsItem(parent),
+DialText::DialText(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent),
 											QObject(),
 											mX(0),
 											mY(0),
 											mRadius(235),
 											mMajorIncrements(0),
 											mText(nullptr) {
+#ifdef CPDEBUG
+	qDebug() << name;
+#endif
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -148,7 +156,7 @@ void DialText::setIncrements(const qreal &major) {
 //</editor-fold>
 
 //<editor-fold desc="DialIncrements">
-DialIncrements::DialIncrements(QGraphicsItem *parent) : QGraphicsItem(parent),
+DialIncrements::DialIncrements(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent),
 														QObject(),
 														doLastLine(false),
 														mX(0),
@@ -156,6 +164,9 @@ DialIncrements::DialIncrements(QGraphicsItem *parent) : QGraphicsItem(parent),
 														mMajor(0),
 														mMinor(0),
 														mRadius(225) {
+#ifdef CPDEBUG
+	qDebug() << name;
+#endif
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -221,13 +232,16 @@ void DialIncrements::setIncrements(const qreal &major, const qreal &minor) {
 //</editor-fold>
 
 //<editor-fold desc="DialNeedle">
-DialNeedle::DialNeedle(QGraphicsItem *parent) : QGraphicsItem(parent),
+DialNeedle::DialNeedle(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent),
 												QObject(),
 												mX(0),
 												mY(0),
 												mRadius(225),
 												mAngle(0),
 												mAngleLimit(0) {
+#ifdef CPDEBUG
+	qDebug() << name;
+#endif
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 

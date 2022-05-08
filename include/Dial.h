@@ -18,7 +18,7 @@ class Dial : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit Dial(QGraphicsItem *parent = nullptr);
+	explicit Dial(const QString &,QGraphicsItem *parent = nullptr);
 	~Dial() override;
 	[[nodiscard]] QRectF boundingRect() const override;
 	[[nodiscard]] QPainterPath shape() const override;
@@ -44,7 +44,7 @@ class DialOuter : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DialOuter(QGraphicsItem *parent = nullptr);
+	explicit DialOuter(const QString &,QGraphicsItem *parent = nullptr);
 	~DialOuter() override;
 	[[nodiscard]] QRectF boundingRect() const override;
 	[[nodiscard]] QPainterPath shape() const override;
@@ -54,7 +54,6 @@ private:
 	qreal mx;
 	qreal my;
 public slots:
-	
 	[[maybe_unused]] void setRadius(const qreal &);
 	void setPosition(const qreal &, const qreal &);
 };
@@ -63,7 +62,7 @@ class DialText : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DialText(QGraphicsItem *parent = nullptr);
+	explicit DialText(const QString &,QGraphicsItem *parent = nullptr);
 	~DialText() override;
 	[[nodiscard]] QRectF boundingRect() const override;
 	[[nodiscard]] QPainterPath shape() const override;
@@ -84,7 +83,7 @@ class DialIncrements : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DialIncrements(QGraphicsItem *parent = nullptr);
+	explicit DialIncrements(const QString &,QGraphicsItem *parent = nullptr);
 	~DialIncrements() override;
 	[[nodiscard]] QRectF boundingRect() const override;
 	[[nodiscard]] QPainterPath shape() const override;
@@ -108,7 +107,7 @@ class DialNeedle : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DialNeedle(QGraphicsItem *parent = nullptr);
+	explicit DialNeedle(const QString &,QGraphicsItem *parent = nullptr);
 	~DialNeedle() override;
 	[[nodiscard]] QRectF boundingRect() const override;
 	[[nodiscard]] QPainterPath shape() const override;

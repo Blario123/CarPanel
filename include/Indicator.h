@@ -8,7 +8,7 @@ class Indicator : public QObject, public QGraphicsItem {
 	Q_OBJECT
 	
 public:
-	explicit Indicator(QGraphicsItem *parent = nullptr);
+	explicit Indicator(const QString &,QGraphicsItem *parent = nullptr);
 	~Indicator() override = default;
 	[[nodiscard]] QRectF boundingRect() const override { return {}; }
 	[[nodiscard]] QPainterPath shape() const override;

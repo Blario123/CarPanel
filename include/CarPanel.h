@@ -18,7 +18,7 @@ class CarPanel : public QWidget {
     Q_OBJECT
 
 public:
-    explicit CarPanel(QWidget *parent = nullptr);
+    explicit CarPanel(const QString &,QWidget *parent = nullptr);
     ~CarPanel() override = default;
 	RevCounter *left;
 	Speedometer *right;

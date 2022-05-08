@@ -2,7 +2,12 @@
 #include <QPainterPath>
 #include "../include/Indicator.h"
 
-Indicator::Indicator(QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {}
+Indicator::Indicator(const QString &name,QGraphicsItem *parent) : 	QGraphicsItem(parent),
+																	QObject() {
+#ifdef CPDEBUG
+	qDebug() << name;
+#endif
+}
 
 void Indicator::toggle() {
 	if(mState) {

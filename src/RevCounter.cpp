@@ -1,8 +1,11 @@
 #include "../include/RevCounter.h"
 
-RevCounter::RevCounter(QGraphicsItem *parent) : QGraphicsItem(parent),
+RevCounter::RevCounter(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent),
 												QObject(),
-												dial(new Dial) {
+												dial(new Dial(name + "::Dial", this)) {
+	#ifdef CPDEBUG
+		qDebug() << name;
+	#endif
 	dial->setPosition(325, 375);
 	dial->setIncrements(9, 3);
 	dial->text->setText({"0", "10", "20", "30", "40", "50", "60", "70", "80"});

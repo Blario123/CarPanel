@@ -9,7 +9,7 @@ class RevCounter : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit RevCounter(QGraphicsItem *parent = nullptr);
+	explicit RevCounter(const QString &,QGraphicsItem *parent = nullptr);
 	~RevCounter() override;
 	[[nodiscard]] QRectF boundingRect() const override;
 	[[nodiscard]] QPainterPath shape() const override;
