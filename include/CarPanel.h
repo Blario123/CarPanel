@@ -32,6 +32,8 @@ public:
 private:
     QGridLayout *layout;
 	QAction *showControl;
+public slots:
+    void showRClickMenu(const QPoint &p);
 signals:
 	void toggleLInd();
 	void toggleRInd();

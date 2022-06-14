@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 if(WIN32)
     set(CMAKE_PREFIX_PATH "C:/Qt/6.2.2/mingw_64/lib/cmake")
 else()
-
+    set(CMAKE_PREFIX_PATH /home/blair/Qt/6.3.0/gcc_64)
 endif(WIN32)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${Qt5_Widgets_INCLUDE_DIRS})
