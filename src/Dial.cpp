@@ -32,7 +32,7 @@ void Dial::setIncrements(qreal major, qreal minor) {
 }
 
 QRectF Dial::boundingRect() const {
-	return {};
+	return shape().boundingRect();
 }
 
 QPainterPath Dial::shape() const {
@@ -70,7 +70,7 @@ DialOuter::DialOuter(const QString &name,QGraphicsItem *parent) : QGraphicsItem(
 DialOuter::~DialOuter() = default;
 
 QRectF DialOuter::boundingRect() const {
-	return {};
+	return shape().boundingRect();
 }
 
 QPainterPath DialOuter::shape() const {
@@ -114,7 +114,7 @@ DialText::DialText(const QString &name,QGraphicsItem *parent) : QGraphicsItem(pa
 DialText::~DialText() = default;
 
 QRectF DialText::boundingRect() const {
-	return {};
+	return shape().boundingRect();
 }
 
 QPainterPath DialText::shape() const {
@@ -173,7 +173,7 @@ DialIncrements::DialIncrements(const QString &name,QGraphicsItem *parent) : QGra
 DialIncrements::~DialIncrements() = default;
 
 QRectF DialIncrements::boundingRect() const {
-	return {};
+	return shape().boundingRect();
 }
 
 QPainterPath DialIncrements::shape() const {
@@ -248,7 +248,7 @@ DialNeedle::DialNeedle(const QString &name,QGraphicsItem *parent) : QGraphicsIte
 DialNeedle::~DialNeedle() = default;
 
 QRectF DialNeedle::boundingRect() const {
-	return {};
+	return shape().boundingRect();
 }
 
 QPainterPath DialNeedle::shape() const {

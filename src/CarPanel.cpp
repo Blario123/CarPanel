@@ -5,7 +5,7 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
                                                              left(new RevCounter("RevCounter")),
                                                              right(new Speedometer("Speedometer")),
                                                              center(new DisplayMain("Display")),
-                                                             ctrl(new Control("Control", this)),
+                                                             ctrl(new Control("Control")),
                                                              leftInd(new Indicator("LeftIndicator")),
                                                              rightInd(new Indicator("RightIndicator")),
                                                              layout(new QGridLayout),
@@ -18,7 +18,6 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
 #endif
     setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
     setAttribute(Qt::WA_DeleteOnClose);
-    setGeometry(0, 0, 1600, 800);
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     layout->setContentsMargins(0, 0, 0 , 0);
@@ -39,17 +38,19 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
     scene->addItem(leftInd);
     scene->addItem(rightInd);
 
-    scene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    scene->setItemIndexMethod(QGraphicsScene::BspTreeIndex);
 
     view->setContentsMargins(0, 0, 0, 0);
     view->setScene(scene);
+    view->setSceneRect(scene->itemsBoundingRect());
     view->setRenderHint(QPainter::Antialiasing);
     view->setCacheMode(QGraphicsView::CacheNone);
-    view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     view->setStyleSheet("background: transparent");
+    qDebug() << view->sceneRect();
 
     layout->addWidget(view, 0, 0);
 

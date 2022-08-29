@@ -1,18 +1,14 @@
 #include "../include/Display.h"
 
 //<editor-fold desc="Display">
-DisplayMain::DisplayMain(const QString &name,QGraphicsItem *parent) : 	QGraphicsItem(parent),
+DisplayMain::DisplayMain(const QString &name, QGraphicsItem *parent) :
+                                                    QGraphicsItem(parent),
 													QObject(),
 													logo(new DisplayLogo(name + "::Logo", this)),
 													border(new DisplayBorder(name + "::Border", this)),
 													text(new DisplayText(name + "::Text", this)),
 													time(new DisplayTime(name + "::Time", this)),
 													timer(new QTimer(this)) {
-#ifdef CPDEBUG
-	qDebug() << name;
-#endif
-	text->setZValue(1);
-	
 	connect(timer, &QTimer::timeout, logo, &DisplayLogo::hideLogo);
 	connect(timer, &QTimer::timeout, text, &DisplayText::showText);
 	connect(timer, &QTimer::timeout, border, &DisplayBorder::showBorder);
@@ -32,6 +28,7 @@ QPainterPath DisplayMain::shape() const {
 }
 
 void DisplayMain::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
 }
 
 void DisplayMain::setPosition(qreal x, qreal y) {

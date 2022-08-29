@@ -10,6 +10,7 @@
 #include <QTime>
 #include <QFont>
 #include <QFontMetricsF>
+#include <utility>
 
 class DisplayLogo;
 class DisplayBorder;
@@ -22,7 +23,7 @@ Q_INTERFACES(QGraphicsItem)
 public:
     explicit DisplayMain(const QString &,QGraphicsItem *parent = nullptr);
     ~DisplayMain() override = default;
-	[[nodiscard]] QRectF boundingRect() const override { return {}; }
+	[[nodiscard]] QRectF boundingRect() const override { return shape().boundingRect(); };
 	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 	DisplayLogo *logo;
@@ -42,19 +43,18 @@ class DisplayLogo : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DisplayLogo(const QString &,QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() {
+	explicit DisplayLogo(QString name, QGraphicsItem *parent = nullptr) : QObject(), QGraphicsItem(parent), mName(std::move(name)) {
 		show();
+		logo.load(":/resources/Logo.png");
 	};
 	~DisplayLogo() override = default;
 	[[nodiscard]] QRectF boundingRect() const override {
-		return {};
+		return {mX + 25, mY +25, (float) logo.rect().width(), (float) logo.rect().height()};
 	}
 	[[nodiscard]] QPainterPath shape() const override {
-		return QGraphicsItem::shape();
+        return QGraphicsItem::shape();
 	}
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
-		QPixmap logo;
-		logo.load(":/resources/Logo.png");
 		painter->drawPixmap((int) mX + 25, (int) mY + 25, logo);
 	}
 public slots:
@@ -70,6 +70,8 @@ public slots:
 	}
 
 private:
+    QString mName;
+    QPixmap logo;
 	qreal mX = 0;
 	qreal mY = 0;
 };
@@ -80,7 +82,7 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit DisplayBorder(const QString &,QGraphicsItem *parent = nullptr) : QGraphicsItem(parent), QObject() { hide(); };
 	~DisplayBorder() override = default;
-	[[nodiscard]] QRectF boundingRect() const override { return {}; }
+	[[nodiscard]] QRectF boundingRect() const override { return shape().boundingRect(); }
 	[[nodiscard]] QPainterPath shape() const override {
 		QPainterPath path;
 		path.addRect(0, 0, 300, 400);
@@ -139,7 +141,7 @@ public:
 		hide();
 	}
 	~DisplayText() override = default;
-	[[nodiscard]] QRectF boundingRect() const override { return {}; }
+	[[nodiscard]] QRectF boundingRect() const override { return shape().boundingRect(); }
 	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 public slots:
@@ -191,7 +193,7 @@ Q_INTERFACES(QGraphicsItem)
 public:
 	explicit DisplayTime(const QString &,QGraphicsItem *parent = nullptr);
 	~DisplayTime() override = default;
-	[[nodiscard]] QRectF boundingRect() const override { return {}; }
+	[[nodiscard]] QRectF boundingRect() const override { return shape().boundingRect(); }
 	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 private:
