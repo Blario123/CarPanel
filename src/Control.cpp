@@ -1,11 +1,14 @@
 #include "include/Control.h"
 
 Control::Control(const QString &name,QWidget *parent) : QWidget(parent),
+                                                        indicatorTimer(new QTimer(this)),
                                                         controlLayout(new QGridLayout),
                                                         sliderBox(new QGroupBox("Slider Control")),
                                                         tripBox(new QGroupBox("Trip Control")),
+                                                        indicatorBox(new QGroupBox("Indicator Control")),
                                                         sliderLayout(new QGridLayout),
                                                         tripLayout(new QGridLayout),
+                                                        indicatorLayout(new QGridLayout),
                                                         speedLineEdit(new QLineEdit),
                                                         revLineEdit(new QLineEdit),
                                                         speedLabel(new QLabel(tr("Speed"))),
@@ -15,10 +18,11 @@ Control::Control(const QString &name,QWidget *parent) : QWidget(parent),
                                                         speedSlider(new QSlider),
                                                         revSlider(new QSlider),
                                                         spinBox(new QSpinBox),
-                                                        tripTree(new QTreeWidget) {
-#ifdef CPDEBUG
-    qDebug() << name;
-#endif
+                                                        tripTree(new QTreeWidget),
+                                                        leftIndButton(new QPushButton("Left")),
+                                                        rightIndButton(new QPushButton("Right")),
+                                                        hazardButton(new QPushButton("Hazard")) {
+    indicatorTimer->start(500);
     speedLineEdit->setText(QString::number(speedSlider->value()));
     revLineEdit->setText(QString::number(revSlider->value()));
 
@@ -41,10 +45,6 @@ Control::Control(const QString &name,QWidget *parent) : QWidget(parent),
     auto *tempItem = new QTreeWidgetItem;
     tripTree->addTopLevelItem(tempItem);
 
-    connect(tripTree, &QTreeWidget::itemDoubleClicked, this, &Control::onItemDoubleClicked);
-    connect(speedSlider, &QSlider::valueChanged, this, &Control::setSpeed);
-    connect(revSlider, &QSlider::valueChanged, this, &Control::setRev);
-    connect(spinBox, &QSpinBox::valueChanged, this, &Control::processPage);
 
     tripLayout->addWidget(tripTree);
     tripBox->setLayout(tripLayout);
@@ -60,10 +60,23 @@ Control::Control(const QString &name,QWidget *parent) : QWidget(parent),
     sliderLayout->addWidget(spinBox, 1, 2, 2, 1);
     sliderBox->setLayout(sliderLayout);
 
-    controlLayout->addWidget(sliderBox);
-    controlLayout->addWidget(tripBox);
+    indicatorLayout->addWidget(leftIndButton, 0, 0);
+    indicatorLayout->addWidget(rightIndButton, 0, 1);
+    indicatorLayout->addWidget(hazardButton, 1, 0, 1, 2);
+    indicatorBox->setLayout(indicatorLayout);
+
+    controlLayout->addWidget(sliderBox, 0, 0);
+    controlLayout->addWidget(indicatorBox, 0, 1);
+    controlLayout->addWidget(tripBox, 1, 0, 1, 2);
 
     setLayout(controlLayout);
+    connect(leftIndButton, &QPushButton::clicked, this, &Control::onLeftIndicatorClicked);
+    connect(rightIndButton, &QPushButton::clicked, this, &Control::onRightIndicatorClicked);
+    connect(hazardButton, &QPushButton::clicked, this, &Control::onHazardClicked);
+    connect(tripTree, &QTreeWidget::itemDoubleClicked, this, &Control::onItemDoubleClicked);
+    connect(speedSlider, &QSlider::valueChanged, this, &Control::setSpeed);
+    connect(revSlider, &QSlider::valueChanged, this, &Control::setRev);
+    connect(spinBox, &QSpinBox::valueChanged, this, &Control::processPage);
 }
 
 void Control::setSpeed(int value) {
@@ -122,5 +135,51 @@ void Control::onItemDoubleClicked(QTreeWidgetItem *item, int column) {
         item->setFlags(item->flags() & (~Qt::ItemIsEditable));
     } else {
         item->setFlags(item->flags() | Qt::ItemIsEditable);
+    }
+}
+
+void Control::onLeftIndicatorClicked() {
+    if(!doLeftIndicator) {
+        disconnect(connection);
+        doLeftIndicator = true;
+        doRightIndicator = false;
+        doHazard = false;
+        connection = connect(indicatorTimer, &QTimer::timeout, [=](){
+            emit toggleLInd();
+        });
+    } else {
+        doLeftIndicator = false;
+        disconnect(connection);
+    }
+}
+
+void Control::onRightIndicatorClicked() {
+    if(!doRightIndicator) {
+        disconnect(connection);
+        doLeftIndicator = false;
+        doRightIndicator = true;
+        doHazard = false;
+        connection = connect(indicatorTimer, &QTimer::timeout, [=](){
+            emit toggleRInd();
+        });
+    } else {
+        doRightIndicator = false;
+        disconnect(connection);
+    }
+}
+
+void Control::onHazardClicked() {
+    if(!doHazard) {
+        disconnect(connection);
+        doLeftIndicator = false;
+        doRightIndicator = false;
+        doHazard = true;
+        connection = connect(indicatorTimer, &QTimer::timeout, [=]() {
+            emit toggleLInd();
+            emit toggleRInd();
+        });
+    } else {
+        doHazard = false;
+        disconnect(connection);
     }
 }

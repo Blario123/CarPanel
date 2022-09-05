@@ -9,6 +9,8 @@
 #include <QSpinBox>
 #include <QGroupBox>
 #include <QTreeWidget>
+#include <QPushButton>
+#include <QTimer>
 
 class Control : public QWidget {
 Q_OBJECT
@@ -22,17 +24,26 @@ private slots:
 	void setRev(int value);
 	void processPage(int value);
     void onItemDoubleClicked(QTreeWidgetItem *, int);
+    void onLeftIndicatorClicked();
+    void onRightIndicatorClicked();
+    void onHazardClicked();
 signals:
 	void speedChanged(qreal);
 	void revChanged(qreal);
 	void closeSignal();
 	void pageChanged(int);
+    void toggleLInd();
+    void toggleRInd();
 private:
+    QMetaObject::Connection connection;
+    QTimer *indicatorTimer;
     QGridLayout *controlLayout;
     QGroupBox *sliderBox;
     QGroupBox *tripBox;
+    QGroupBox *indicatorBox;
     QGridLayout *sliderLayout;
     QGridLayout *tripLayout;
+    QGridLayout *indicatorLayout;
     QLineEdit *speedLineEdit;
 	QLineEdit *revLineEdit;
 	QLabel *speedLabel;
@@ -41,6 +52,12 @@ private:
 	QLabel *pageName;
 	QSpinBox *spinBox;
     QTreeWidget *tripTree;
+    QPushButton *leftIndButton;
+    QPushButton *rightIndButton;
+    QPushButton *hazardButton;
+    bool doLeftIndicator = false;
+    bool doRightIndicator = false;
+    bool doHazard = false;
 protected:
 	void closeEvent(QCloseEvent *event);
 };

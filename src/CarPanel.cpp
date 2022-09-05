@@ -45,7 +45,7 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
     view->setSceneRect(scene->itemsBoundingRect());
     view->setRenderHint(QPainter::Antialiasing);
     view->setCacheMode(QGraphicsView::CacheNone);
-    view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -65,10 +65,12 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
     connect(ctrl, &Control::speedChanged, this->center->text, &DisplayText::setSpeed);
     connect(ctrl, &Control::revChanged, this->left->dial->needle, &DialNeedle::setAngle);
     connect(ctrl, &Control::pageChanged, this->center->text, &DisplayText::setPage);
-//	connect(ctrl, &Control::closeSignal, this, &QWidget::deleteLater);
-    connect(this, &CarPanel::destroyed, ctrl, &Control::deleteLater);
+	connect(ctrl, &Control::closeSignal, this, &QWidget::deleteLater);
+
     connect(this, &CarPanel::toggleLInd, leftInd, &Indicator::toggle);
+    connect(ctrl, &Control::toggleLInd, leftInd, &Indicator::toggle);
     connect(this, &CarPanel::toggleRInd, rightInd, &Indicator::toggle);
+    connect(ctrl, &Control::toggleRInd, rightInd, &Indicator::toggle);
     connect(this, &CarPanel::customContextMenuRequested, this, &CarPanel::showRClickMenu);
 }
 
