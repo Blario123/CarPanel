@@ -8,7 +8,8 @@ DisplayMain::DisplayMain(const QString &name, QGraphicsItem *parent) :
 													border(new DisplayBorder(name + "::Border", this)),
 													text(new DisplayText(name + "::Text", this)),
 													time(new DisplayTime(name + "::Time", this)),
-													timer(new QTimer(this)) {
+													timer(new QTimer(this)),
+                                                    mName(name) {
 	connect(timer, &QTimer::timeout, logo, &DisplayLogo::hideLogo);
 	connect(timer, &QTimer::timeout, text, &DisplayText::showText);
 	connect(timer, &QTimer::timeout, border, &DisplayBorder::showBorder);
@@ -190,9 +191,6 @@ void DisplayText::setPage(int p) {
 
 //<editor-fold desc="DisplayTime">
 DisplayTime::DisplayTime(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent), QObject() {
-#ifdef CPDEBUG
-	qDebug() << name;
-#endif
 	hide();
 	time = QTime::currentTime();
 	auto *timer = new QTimer(this);

@@ -11,13 +11,9 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
                                                              layout(new QGridLayout),
                                                              scene(new QGraphicsScene),
                                                              view(new QGraphicsView),
-                                                             background(new Background),
+                                                             background(new Background("Background")),
                                                              showControl(new QAction("Show Control")) {
-#ifdef CPDEBUG
-    qDebug() << name;
-#endif
     setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-    setAttribute(Qt::WA_DeleteOnClose);
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     layout->setContentsMargins(0, 0, 0 , 0);
@@ -65,20 +61,13 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
     connect(ctrl, &Control::speedChanged, this->center->text, &DisplayText::setSpeed);
     connect(ctrl, &Control::revChanged, this->left->dial->needle, &DialNeedle::setAngle);
     connect(ctrl, &Control::pageChanged, this->center->text, &DisplayText::setPage);
-	connect(ctrl, &Control::closeSignal, this, &QWidget::deleteLater);
+    connect(this, &CarPanel::closeSignal, ctrl, &Control::deleteLater);
 
-    connect(this, &CarPanel::toggleLInd, leftInd, &Indicator::toggle);
     connect(ctrl, &Control::toggleLInd, leftInd, &Indicator::toggle);
-    connect(this, &CarPanel::toggleRInd, rightInd, &Indicator::toggle);
+    connect(ctrl, &Control::setLInd, leftInd, &Indicator::setState);
     connect(ctrl, &Control::toggleRInd, rightInd, &Indicator::toggle);
+    connect(ctrl, &Control::setRInd, rightInd, &Indicator::setState);
     connect(this, &CarPanel::customContextMenuRequested, this, &CarPanel::showRClickMenu);
-}
-
-void CarPanel::mousePressEvent(QMouseEvent *event) {
-    if(event->button() == Qt::LeftButton) {
-        emit toggleLInd();
-        emit toggleRInd();
-    }
 }
 
 void CarPanel::showRClickMenu(const QPoint &p) {
@@ -86,4 +75,10 @@ void CarPanel::showRClickMenu(const QPoint &p) {
     connect(showControl, &QAction::triggered, ctrl, (ctrl->isVisible()) ? &Control::activateWindow : &Control::show);
     rClickMenu.addAction(showControl);
     rClickMenu.exec(mapToGlobal(p));
+}
+
+void CarPanel::closeEvent(QCloseEvent *event) {
+    emit closeSignal();
+    QWidget::closeEvent(event);
+    exit(0);
 }

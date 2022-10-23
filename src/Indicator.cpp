@@ -3,10 +3,8 @@
 #include "../include/Indicator.h"
 
 Indicator::Indicator(const QString &name,QGraphicsItem *parent) : 	QGraphicsItem(parent),
-																	QObject() {
-#ifdef CPDEBUG
-	qDebug() << name;
-#endif
+																	QObject(),
+                                                                    mName(name) {
 }
 
 void Indicator::toggle() {
@@ -16,6 +14,15 @@ void Indicator::toggle() {
 		mState = true;
 	}
 	update();
+}
+
+void Indicator::setState(Global::IndicatorState state) {
+    if(state == Global::IndicatorState::Off) {
+        mState = false;
+    } else {
+        mState = true;
+    }
+    update();
 }
 
 QPainterPath Indicator::shape() const {

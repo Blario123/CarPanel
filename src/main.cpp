@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QMetaType>
 
 #include "include/CarPanel.h"
 #include <QStyleFactory>

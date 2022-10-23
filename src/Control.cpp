@@ -1,6 +1,6 @@
 #include "include/Control.h"
 
-Control::Control(const QString &name,QWidget *parent) : QWidget(parent),
+Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
                                                         indicatorTimer(new QTimer(this)),
                                                         controlLayout(new QGridLayout),
                                                         sliderBox(new QGroupBox("Slider Control")),
@@ -89,10 +89,6 @@ void Control::setRev(int value) {
     emit revChanged(value);
 }
 
-void Control::closeEvent(QCloseEvent *event) {
-    emit closeSignal();
-}
-
 void Control::processPage(int value) {
     emit pageChanged(value);
     switch(value) {
@@ -141,6 +137,7 @@ void Control::onItemDoubleClicked(QTreeWidgetItem *item, int column) {
 void Control::onLeftIndicatorClicked() {
     if(!doLeftIndicator) {
         disconnect(connection);
+        emit setRInd(Global::IndicatorState::Off);
         doLeftIndicator = true;
         doRightIndicator = false;
         doHazard = false;
@@ -148,14 +145,16 @@ void Control::onLeftIndicatorClicked() {
             emit toggleLInd();
         });
     } else {
-        doLeftIndicator = false;
         disconnect(connection);
+        doLeftIndicator = false;
+        emit setLInd(Global::IndicatorState::Off);
     }
 }
 
 void Control::onRightIndicatorClicked() {
     if(!doRightIndicator) {
         disconnect(connection);
+        emit setLInd(Global::IndicatorState::Off);
         doLeftIndicator = false;
         doRightIndicator = true;
         doHazard = false;
@@ -163,14 +162,17 @@ void Control::onRightIndicatorClicked() {
             emit toggleRInd();
         });
     } else {
-        doRightIndicator = false;
         disconnect(connection);
+        doRightIndicator = false;
+        emit setRInd(Global::IndicatorState::Off);
     }
 }
 
 void Control::onHazardClicked() {
     if(!doHazard) {
         disconnect(connection);
+        emit setLInd(Global::IndicatorState::Off);
+        emit setRInd(Global::IndicatorState::Off);
         doLeftIndicator = false;
         doRightIndicator = false;
         doHazard = true;
@@ -179,7 +181,13 @@ void Control::onHazardClicked() {
             emit toggleRInd();
         });
     } else {
+        emit setLInd(Global::IndicatorState::Off);
+        emit setRInd(Global::IndicatorState::Off);
         doHazard = false;
         disconnect(connection);
     }
+}
+
+void Control::shutdown() {
+    qDebug() << "Close";
 }

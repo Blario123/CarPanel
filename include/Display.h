@@ -32,6 +32,7 @@ public:
 	DisplayTime *time;
 	QTimer *timer;
 private:
+    QString mName;
 public slots:
 	[[maybe_unused]] void showDisplay();
 	void setPosition(qreal, qreal);
@@ -43,7 +44,7 @@ class DisplayLogo : public QObject, public QGraphicsItem {
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
-	explicit DisplayLogo(QString name, QGraphicsItem *parent = nullptr) : QObject(), QGraphicsItem(parent), mName(std::move(name)) {
+	explicit DisplayLogo(QString name, QGraphicsItem *parent = nullptr) : QObject(), QGraphicsItem(parent), mName(name) {
 		show();
 		logo.load(":/resources/Logo.png");
 	};

@@ -16,30 +16,27 @@
 
 class CarPanel : public QWidget {
     Q_OBJECT
-
 public:
     explicit CarPanel(const QString &,QWidget *parent = nullptr);
-    ~CarPanel() override = default;
+//    ~CarPanel() override = default;
 	RevCounter *left;
 	Speedometer *right;
     DisplayMain *center;
 	Control *ctrl;
 	Indicator *leftInd;
 	Indicator *rightInd;
+	Background *background;
 	QGraphicsScene *scene;
 	QGraphicsView *view;
-	Background *background;
 private:
     QGridLayout *layout;
 	QAction *showControl;
 public slots:
     void showRClickMenu(const QPoint &p);
 signals:
-	void toggleLInd();
-	void toggleRInd();
+    void closeSignal();
 protected:
-	void mousePressEvent(QMouseEvent *event) override;
-	
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // CARPANEL_CARPANEL_H

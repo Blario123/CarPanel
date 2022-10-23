@@ -9,10 +9,6 @@ Dial::Dial(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent),
 									increments(new DialIncrements(name + "::Increments", this)),
 									needle(new DialNeedle(name + "::Needle", this)),
 									text(new DialText(name + "::Text", this)) {
-#ifdef CPDEBUG
-	qDebug() << name;
-#endif
-	
 	connect(this, &Dial::positionChanged, outer, &DialOuter::setPosition);
 	connect(this, &Dial::positionChanged, needle, &DialNeedle::setPosition);
 	connect(this, &Dial::positionChanged, increments, &DialIncrements::setPosition);
@@ -105,9 +101,6 @@ DialText::DialText(const QString &name,QGraphicsItem *parent) : QGraphicsItem(pa
 											mRadius(235),
 											mMajorIncrements(0),
 											mText(nullptr) {
-#ifdef CPDEBUG
-	qDebug() << name;
-#endif
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -164,9 +157,6 @@ DialIncrements::DialIncrements(const QString &name,QGraphicsItem *parent) : QGra
 														mMajor(0),
 														mMinor(0),
 														mRadius(225) {
-#ifdef CPDEBUG
-	qDebug() << name;
-#endif
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 
@@ -239,9 +229,6 @@ DialNeedle::DialNeedle(const QString &name,QGraphicsItem *parent) : QGraphicsIte
 												mRadius(225),
 												mAngle(0),
 												mAngleLimit(0) {
-#ifdef CPDEBUG
-	qDebug() << name;
-#endif
 	setFlag(QGraphicsItem::ItemStacksBehindParent);
 }
 

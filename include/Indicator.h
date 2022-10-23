@@ -3,10 +3,11 @@
 
 #include <QObject>
 #include <QGraphicsItem>
+#include "Global.h"
 
 class Indicator : public QObject, public QGraphicsItem {
 	Q_OBJECT
-	
+    Q_INTERFACES(QGraphicsItem)
 public:
 	explicit Indicator(const QString &,QGraphicsItem *parent = nullptr);
 	~Indicator() override = default;
@@ -16,10 +17,12 @@ public:
 
 public slots:
 	void toggle();
+    void setState(Global::IndicatorState);
 	void setPosition(qreal, qreal);
 	void toggleOrientation();
 
 private:
+    QString mName;
 	bool mState = false;
 	qreal mX = 0, mY = 0;
 	qreal mSize = 64;

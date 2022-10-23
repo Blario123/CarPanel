@@ -41,7 +41,8 @@ set(header_gui
         include/RevCounter.h
         include/Dial.h
         include/Indicator.h
-        include/Background.h)
+        include/Background.h
+        include/Global.h)
 
 add_executable(CarPanel ${source_gui} ${header_gui})
 

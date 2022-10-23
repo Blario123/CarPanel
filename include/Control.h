@@ -11,14 +11,19 @@
 #include <QTreeWidget>
 #include <QPushButton>
 #include <QTimer>
+#include <QCloseEvent>
+#include "Global.h"
 
-class Control : public QWidget {
+
+class Control : public QDialog {
 Q_OBJECT
 public:
 	explicit Control(const QString &,QWidget *parent = nullptr);
 	~Control() override = default;
 	QSlider *speedSlider;
 	QSlider *revSlider;
+public slots:
+    void shutdown();
 private slots:
 	void setSpeed(int value);
 	void setRev(int value);
@@ -34,6 +39,8 @@ signals:
 	void pageChanged(int);
     void toggleLInd();
     void toggleRInd();
+    void setLInd(Global::IndicatorState);
+    void setRInd(Global::IndicatorState);
 private:
     QMetaObject::Connection connection;
     QTimer *indicatorTimer;
@@ -58,8 +65,6 @@ private:
     bool doLeftIndicator = false;
     bool doRightIndicator = false;
     bool doHazard = false;
-protected:
-	void closeEvent(QCloseEvent *event);
 };
 
 #endif //CARPANEL_CONTROL_H
