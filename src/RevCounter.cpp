@@ -2,7 +2,7 @@
 
 RevCounter::RevCounter(const QString &name,QGraphicsItem *parent) : QGraphicsItem(parent),
 												QObject(),
-												dial(new Dial(name + "::Dial", this)) {
+												dial(new Dial(name + "::Dial",Global::DialType::Primary, this)) {
 	dial->setPosition(325, 375);
 	dial->setIncrements(9, 3);
 	dial->text->setText({"0", "10", "20", "30", "40", "50", "60", "70", "80"});

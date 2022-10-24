@@ -15,6 +15,7 @@ public:
 	[[nodiscard]] QPainterPath shape() const override;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 	Dial *dial;
+    Dial *kmDial;
 };
 
 #endif // CARPANEL_SPEEDOMETER_H
