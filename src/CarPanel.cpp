@@ -49,8 +49,7 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
 
     layout->addWidget(view, 0, 0);
 
-    int returnId = QFontDatabase::addApplicationFont(":/resources/CarPanel.otf");
-    if(returnId == -1) {
+    if(QFontDatabase::addApplicationFont(":/resources/CarPanel.otf") == -1) {
         qDebug() << "Font failed to load";
     }
 

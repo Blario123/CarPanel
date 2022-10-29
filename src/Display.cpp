@@ -45,9 +45,6 @@ void DisplayMain::setPosition(qreal x, qreal y) {
 QPainterPath DisplayText::shape() const {
 	QPainterPath path, tempPath;
 	QFont f("CarPanel");
-	f.setKerning(false);
-	f.setFixedPitch(true);
-	f.setPointSize(20);
 	switch(page) {
 		case 0:
 			displayData->title = "";
