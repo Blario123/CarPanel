@@ -17,7 +17,24 @@ class Global {
             Secondary
         };
         Q_ENUM(DialType);
+
         constexpr static float radiusRatio = 1.0/275.0;
+
+        enum ControlPage {
+            Speed,
+            Warning,
+            OilTemperature,
+            Consumption,
+            AvgConsumption,
+            Range,
+            TravellingTime,
+            Distance,
+            AvgSpeed,
+            Pages_MAX = AvgSpeed
+        };
+        Q_ENUM(ControlPage);
+
+        constexpr static QMargins noMargins = {0,0,0,0};
 };
 
 #endif //GLOBAL_H

@@ -6,18 +6,19 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
                                                         sliderBox(new QGroupBox("Slider Control")),
                                                         tripBox(new QGroupBox("Trip Control")),
                                                         indicatorBox(new QGroupBox("Indicator Control")),
+                                                        pageBox(new QGroupBox("Page")),
                                                         sliderLayout(new QGridLayout),
                                                         tripLayout(new QGridLayout),
                                                         indicatorLayout(new QGridLayout),
+                                                        pageLayout(new QGridLayout),
                                                         speedLineEdit(new QLineEdit),
                                                         revLineEdit(new QLineEdit),
                                                         speedLabel(new QLabel(tr("Speed"))),
                                                         revLabel(new QLabel(tr("Rev/m"))),
                                                         pageLabel(new QLabel(tr("Page"))),
-                                                        pageName(new QLabel(tr("Speed"))),
                                                         speedSlider(new QSlider),
                                                         revSlider(new QSlider),
-                                                        spinBox(new QSpinBox),
+                                                        spinBox(new ControlSpinBox),
                                                         tripTree(new QTreeWidget),
                                                         leftIndButton(new QPushButton("Left")),
                                                         rightIndButton(new QPushButton("Right")),
@@ -36,11 +37,6 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
     revSlider->setOrientation(Qt::Horizontal);
     speedSlider->setFixedWidth(500);
 
-    spinBox->setSizePolicy(QSizePolicy::Policy::Maximum, QSizePolicy::Policy::Expanding);
-    spinBox->setFixedWidth(100);
-    spinBox->setRange(0, 8);
-    spinBox->setWrapping(true);
-
     tripTree->setHeaderLabels({"", "Value"});
     auto *tempItem = new QTreeWidgetItem;
     tripTree->addTopLevelItem(tempItem);
@@ -55,10 +51,10 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
     sliderLayout->addWidget(revLabel, 2, 0);
     sliderLayout->addWidget(revLineEdit, 2, 1);
     sliderLayout->addWidget(revSlider, 3, 0, 1, 2);
-    sliderLayout->addWidget(pageLabel, 0, 2);
-    sliderLayout->addWidget(pageName, 3, 2);
-    sliderLayout->addWidget(spinBox, 1, 2, 2, 1);
     sliderBox->setLayout(sliderLayout);
+
+    pageLayout->addWidget(spinBox);
+    pageBox->setLayout(pageLayout);
 
     indicatorLayout->addWidget(leftIndButton, 0, 0);
     indicatorLayout->addWidget(rightIndButton, 0, 1);
@@ -67,7 +63,8 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
 
     controlLayout->addWidget(sliderBox, 0, 0);
     controlLayout->addWidget(indicatorBox, 0, 1);
-    controlLayout->addWidget(tripBox, 1, 0, 1, 2);
+    controlLayout->addWidget(pageBox, 1, 1);
+    controlLayout->addWidget(tripBox, 1, 0, 2, 1);
 
     setLayout(controlLayout);
     connect(leftIndButton, &QPushButton::clicked, this, &Control::onLeftIndicatorClicked);
@@ -76,7 +73,10 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
     connect(tripTree, &QTreeWidget::itemDoubleClicked, this, &Control::onItemDoubleClicked);
     connect(speedSlider, &QSlider::valueChanged, this, &Control::setSpeed);
     connect(revSlider, &QSlider::valueChanged, this, &Control::setRev);
-    connect(spinBox, &QSpinBox::valueChanged, this, &Control::processPage);
+    connect(spinBox, &ControlSpinBox::valueChanged, [=](int value) {
+        emit pageChanged(value);
+        update();
+    });
 }
 
 void Control::setSpeed(int value) {
@@ -87,43 +87,6 @@ void Control::setSpeed(int value) {
 void Control::setRev(int value) {
     revLineEdit->setText(QString::number((qreal) value/100));
     emit revChanged(value);
-}
-
-void Control::processPage(int value) {
-    emit pageChanged(value);
-    switch(value) {
-        case 0:
-            pageName->setText("Speed");
-            break;
-        case 1:
-            pageName->setText("Warning at");
-            break;
-        case 2:
-            pageName->setText("Oil Temperature");
-            break;
-        case 3:
-            pageName->setText("Consumption");
-            break;
-        case 4:
-            pageName->setText("Avg Consumption");
-            break;
-        case 5:
-            pageName->setText("Range");
-            break;
-        case 6:
-            pageName->setText("Travelling Time");
-            break;
-        case 7:
-            pageName->setText("Distance");
-            break;
-        case 8:
-            pageName->setText("Average Speed");
-            break;
-        default:
-            pageName->setText("");
-            break;
-    }
-    update();
 }
 
 void Control::onItemDoubleClicked(QTreeWidgetItem *item, int column) {
@@ -186,8 +149,4 @@ void Control::onHazardClicked() {
         doHazard = false;
         disconnect(connection);
     }
-}
-
-void Control::shutdown() {
-    qDebug() << "Close";
 }
