@@ -34,6 +34,14 @@ class Global {
         };
         Q_ENUM(ControlPage);
 
+        enum ControlPageRange {
+            SinceStart,
+            SinceRefuel,
+            LongTerm,
+            Range_MAX = LongTerm
+        };
+        Q_ENUM(ControlPageRange);
+
         constexpr static QMargins noMargins = {0,0,0,0};
 };
 

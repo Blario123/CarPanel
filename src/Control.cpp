@@ -22,7 +22,9 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
                                                         tripTree(new QTreeWidget),
                                                         leftIndButton(new QPushButton("Left")),
                                                         rightIndButton(new QPushButton("Right")),
-                                                        hazardButton(new QPushButton("Hazard")) {
+                                                        hazardButton(new QPushButton("Hazard")),
+                                                        rangeButton(new QPushButton("Change Range")),
+                                                        rangeIndex(0) {
     indicatorTimer->start(500);
     speedLineEdit->setText(QString::number(speedSlider->value()));
     revLineEdit->setText(QString::number(revSlider->value()));
@@ -54,6 +56,7 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
     sliderBox->setLayout(sliderLayout);
 
     pageLayout->addWidget(spinBox);
+    pageLayout->addWidget(rangeButton);
     pageBox->setLayout(pageLayout);
 
     indicatorLayout->addWidget(leftIndButton, 0, 0);
@@ -76,6 +79,13 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
     connect(spinBox, &ControlSpinBox::valueChanged, [=](int value) {
         emit pageChanged(value);
         update();
+    });
+    connect(rangeButton, &QPushButton::pressed, [=]() {
+        rangeIndex++;
+        if(rangeIndex > Global::ControlPageRange::Range_MAX) {
+            rangeIndex = 0;
+        }
+        emit rangeChanged(Global::ControlPageRange(rangeIndex));
     });
 }
 

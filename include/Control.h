@@ -40,6 +40,7 @@ signals:
     void toggleRInd();
     void setLInd(Global::IndicatorState);
     void setRInd(Global::IndicatorState);
+    void rangeChanged(Global::ControlPageRange);
 private:
     QMetaObject::Connection connection;
     QTimer *indicatorTimer;
@@ -62,9 +63,11 @@ private:
     QPushButton *leftIndButton;
     QPushButton *rightIndButton;
     QPushButton *hazardButton;
+    QPushButton *rangeButton;
     bool doLeftIndicator = false;
     bool doRightIndicator = false;
     bool doHazard = false;
+    qreal rangeIndex;
 };
 
 class ControlSpinBox : public QWidget {

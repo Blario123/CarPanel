@@ -66,6 +66,7 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
     connect(ctrl, &Control::toggleRInd, rightInd, &Indicator::toggle);
     connect(ctrl, &Control::setRInd, rightInd, &Indicator::setState);
     connect(this, &CarPanel::customContextMenuRequested, this, &CarPanel::showRClickMenu);
+    connect(ctrl, &Control::rangeChanged, this->center->text, &DisplayText::setValueRange);
 }
 
 void CarPanel::showRClickMenu(const QPoint &p) {
