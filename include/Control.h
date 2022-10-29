@@ -97,7 +97,6 @@ public:
         layout->setContentsMargins(Global::noMargins);
 
         setLayout(layout);
-        qDebug() << buttonLayout->contentsRect();
 
         connect(upArrow, &QPushButton::pressed, [=]() {
             index++;

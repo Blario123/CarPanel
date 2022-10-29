@@ -46,7 +46,6 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     view->setStyleSheet("background: transparent");
-    qDebug() << view->sceneRect();
 
     layout->addWidget(view, 0, 0);
 
