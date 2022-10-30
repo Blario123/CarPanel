@@ -12,6 +12,12 @@ class Global {
         };
         Q_ENUM(IndicatorState);
 
+        enum IndicatorSide {
+            Left,
+            Right
+        };
+        Q_ENUM(IndicatorSide);
+
         enum DialType {
             Primary,
             Secondary

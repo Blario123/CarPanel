@@ -20,7 +20,9 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
                                                         revSlider(new QSlider),
                                                         spinBox(new ControlSpinBox),
                                                         tripTree(new QTreeWidget),
+                                                        shortLeftIndButton(new QPushButton("Left (Short)")),
                                                         leftIndButton(new QPushButton("Left")),
+                                                        shortRightIndButton(new QPushButton("Right (Short)")),
                                                         rightIndButton(new QPushButton("Right")),
                                                         hazardButton(new QPushButton("Hazard")),
                                                         rangeButton(new QPushButton("Change Range")),
@@ -60,8 +62,10 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
     pageBox->setLayout(pageLayout);
 
     indicatorLayout->addWidget(leftIndButton, 0, 0);
+    indicatorLayout->addWidget(shortLeftIndButton, 1, 0);
     indicatorLayout->addWidget(rightIndButton, 0, 1);
-    indicatorLayout->addWidget(hazardButton, 1, 0, 1, 2);
+    indicatorLayout->addWidget(shortRightIndButton, 1, 1);
+    indicatorLayout->addWidget(hazardButton, 2, 0, 1, 2);
     indicatorBox->setLayout(indicatorLayout);
 
     controlLayout->addWidget(sliderBox, 0, 0);
@@ -86,6 +90,12 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
             rangeIndex = 0;
         }
         emit rangeChanged(Global::ControlPageRange(rangeIndex));
+    });
+    connect(shortLeftIndButton, &QPushButton::pressed, [=]() {
+        onShortIndicate(Global::IndicatorSide::Left);
+    });
+    connect(shortRightIndButton, &QPushButton::pressed, [=]() {
+        onShortIndicate(Global::IndicatorSide::Right);
     });
 }
 
@@ -159,4 +169,19 @@ void Control::onHazardClicked() {
         doHazard = false;
         disconnect(connection);
     }
+}
+
+void Control::onShortIndicate(Global::IndicatorSide side) {
+    disconnect(connection);
+    emit setLInd(Global::IndicatorState::Off);
+    emit setRInd(Global::IndicatorState::Off);
+    timerCount = 0;
+    connection = connect(indicatorTimer, &QTimer::timeout, [=]() {
+        timerCount++;
+        emit (side == Global::IndicatorSide::Left) ? toggleLInd() : toggleRInd();
+        if(timerCount > 6) {
+            disconnect(connection);
+            emit (side == Global::IndicatorSide::Left) ? setLInd(Global::IndicatorState::Off) : setRInd(Global::IndicatorState::Off);
+        }
+    });
 }

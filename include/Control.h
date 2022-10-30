@@ -32,6 +32,7 @@ private slots:
     void onLeftIndicatorClicked();
     void onRightIndicatorClicked();
     void onHazardClicked();
+    void onShortIndicate(Global::IndicatorSide);
 signals:
 	void speedChanged(qreal);
 	void revChanged(qreal);
@@ -60,7 +61,9 @@ private:
 	QLabel *pageLabel;
 	ControlSpinBox *spinBox;
     QTreeWidget *tripTree;
+    QPushButton *shortLeftIndButton;
     QPushButton *leftIndButton;
+    QPushButton *shortRightIndButton;
     QPushButton *rightIndButton;
     QPushButton *hazardButton;
     QPushButton *rangeButton;
@@ -68,6 +71,7 @@ private:
     bool doRightIndicator = false;
     bool doHazard = false;
     qreal rangeIndex;
+    int timerCount;
 };
 
 class ControlSpinBox : public QWidget {
