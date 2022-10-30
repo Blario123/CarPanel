@@ -1,5 +1,5 @@
 #include <QMenu>
-#include "include/CarPanel.h"
+#include "CarPanel.h"
 
 CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
                                                              left(new RevCounter("RevCounter")),

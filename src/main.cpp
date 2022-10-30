@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QMetaType>
 
-#include "include/CarPanel.h"
+#include "CarPanel.h"
 #include <QStyleFactory>
 
 int main(int argc, char *argv[]) {

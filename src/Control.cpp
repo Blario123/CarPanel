@@ -1,4 +1,4 @@
-#include "include/Control.h"
+#include "Control.h"
 
 Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
                                                         indicatorTimer(new QTimer(this)),
