@@ -15,6 +15,7 @@
 #include <QValidator>
 
 #include "Global.h"
+#include "ControlXMLParser.h"
 
 class ControlSpinBox;
 
@@ -72,6 +73,7 @@ private:
     bool doHazard = false;
     qreal rangeIndex;
     int timerCount;
+    XMLParser *parser;
 };
 
 class ControlSpinBox : public QWidget {

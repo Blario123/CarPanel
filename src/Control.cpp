@@ -26,7 +26,8 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
                                                         rightIndButton(new QPushButton("Right")),
                                                         hazardButton(new QPushButton("Hazard")),
                                                         rangeButton(new QPushButton("Change Range")),
-                                                        rangeIndex(0) {
+                                                        rangeIndex(0),
+                                                        parser(new XMLParser("Parser")) {
     indicatorTimer->start(500);
     speedLineEdit->setText(QString::number(speedSlider->value()));
     revLineEdit->setText(QString::number(revSlider->value()));

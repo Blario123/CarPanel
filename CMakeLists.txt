@@ -5,17 +5,17 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-if(WIN32)
-    set(CMAKE_PREFIX_PATH "C:/Qt/6.2.2/mingw_64/lib/cmake")
-else()
-    set(CMAKE_PREFIX_PATH /home/blair/Qt/6.3.0/gcc_64)
-endif(WIN32)
 
+find_package(PkgConfig REQUIRED)
 find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
         REQUIRED)
+
+pkg_check_modules(LIBXMLXX REQUIRED IMPORTED_TARGET libxml++-5.0)
+
+include_directories("/usr/include/libxml++-5.0")
 
 qt6_add_resources(resources resources.qrc)
 
@@ -32,6 +32,7 @@ set(source_gui
         src/RevCounter.cpp
         src/Dial.cpp
         src/Indicator.cpp
+        src/ControlXMLParser.cpp
         )
 
 add_executable(CarPanel ${source_gui})

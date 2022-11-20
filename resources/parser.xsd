@@ -1,0 +1,72 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="CarPanel">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="warningAt">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="value" type="xsd:integer"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="oilTemperature">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="value" type="xsd:integer"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="consumption">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="value" type="xsd:integer"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="avgConsumption">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="sinceStart" type="xsd:integer"/>
+                            <xsd:element name="sinceRefuel" type="xsd:integer"/>
+                            <xsd:element name="longTerm" type="xsd:integer"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="range">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="value" type="xsd:integer"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="travellingTime">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="sinceStart" type="xsd:integer"/>
+                            <xsd:element name="sinceRefuel" type="xsd:integer"/>
+                            <xsd:element name="longTerm" type="xsd:integer"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="distance">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="sinceStart" type="xsd:integer"/>
+                            <xsd:element name="sinceRefuel" type="xsd:integer"/>
+                            <xsd:element name="longTerm" type="xsd:integer"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="avgSpeed">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="sinceStart" type="xsd:integer"/>
+                            <xsd:element name="sinceRefuel" type="xsd:integer"/>
+                            <xsd:element name="longTerm" type="xsd:integer"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

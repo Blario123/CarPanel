@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<CarPanel>
+    <warningAt>
+        <value>0</value>
+    </warningAt>
+    <oilTemperature>
+        <value>0</value>
+    </oilTemperature>
+    <consumption>
+        <value>0</value>
+    </consumption>
+    <avgConsumption>
+        <sinceStart>0</sinceStart>
+        <sinceRefuel>0</sinceRefuel>
+        <longTerm>0</longTerm>
+    </avgConsumption>
+    <range>
+        <value>0</value> 
+    </range>
+    <travellingTime>
+        <sinceStart>0</sinceStart>
+        <sinceRefuel>0</sinceRefuel>
+        <longTerm>0</longTerm>
+    </travellingTime>
+    <distance>       
+        <sinceStart>0</sinceStart>
+        <sinceRefuel>0</sinceRefuel>
+        <longTerm>0</longTerm>
+    </distance>
+    <avgSpeed>
+        <sinceStart>0</sinceStart>
+        <sinceRefuel>0</sinceRefuel>
+        <longTerm>0</longTerm>
+    </avgSpeed>
+</CarPanel>

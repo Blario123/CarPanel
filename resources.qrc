@@ -3,5 +3,7 @@
         <file>resources/outline.png</file>
         <file>resources/Logo.png</file>
         <file>resources/CarPanel.otf</file>
+        <file>resources/parser.xsd</file>
+        <file>resources/emptyCarPanel.xml</file>
     </qresource>
 </RCC>
