@@ -196,7 +196,7 @@ void Control::setValue(Global::ControlPage page, double value) {
         // the rangeName of the previous item can be set to the QVariant of Global::ControlPageRange as well as the current item
         if(tripTree->topLevelItem(itemCount - 1)->data(0, 0).toString() == pageName) {
             if(rangeCount == 0) {
-                tripTree->topLevelItem(itemCount - 1)->setData(1, Qt::DisplayRole, QVariant::fromValue(Global::ControlPageRange(rangeCount++)).toString());
+                tripTree->topLevelItem(itemCount - 1)->setText(1, QVariant::fromValue(Global::ControlPageRange(rangeCount++)).toString());
             }
             rangeName = QVariant::fromValue(Global::ControlPageRange(rangeCount++)).toString();
         } else {
@@ -213,5 +213,6 @@ void Control::setValue(Global::ControlPage page, double value) {
     // Insert the item into tripTree and resize the first column as the pageName will not fit by default
     tripTree->addTopLevelItem(item);
     tripTree->resizeColumnToContents(0);
+    tripTree->resizeColumnToContents(1);
     update();
 }
