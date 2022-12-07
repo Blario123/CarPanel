@@ -22,6 +22,8 @@ DisplayMain::DisplayMain(const QString &name, QGraphicsItem *parent) :
 	
 	timer->setSingleShot(true);
 	timer->start(2000);
+
+
 }
 
 QPainterPath DisplayMain::shape() const {
@@ -45,58 +47,84 @@ void DisplayMain::setPosition(qreal x, qreal y) {
 QPainterPath DisplayText::shape() const {
 	QPainterPath path, tempPath;
 	QFont f("CarPanel");
+    int displayPage = 0;
+    int offset = 0;
 	switch(page) {
-		case 0:
+		case Global::ControlPage::Speed:
 			displayData->title = "";
 			displayData->value = QString::number(round(mSpeed/100));
 			displayData->unit = "mph";
 			displayData->rangeText = "";
 			break;
-		case 1:
+		case Global::ControlPage::Warning:
+            // Page 1
+            offset = 0;
+            displayPage = getDisplayPage(page) + offset;
 			displayData->title = "Warning at";
-			displayData->value = (mWarning > 0) ? QString::number(mWarning) : "---";
+			displayData->value = (values[displayPage] > 0) ? QString::number(values[displayPage]) : "---";
 			displayData->unit = "mph";
 			displayData->rangeText = "";
 			break;
-		case 2:
+		case Global::ControlPage::OilTemperature:
+            // Page 2
+            offset = 0;
+            displayPage = getDisplayPage(page) + offset;
 			displayData->title = "Oil Temperature";
-			displayData->value = QString::number(mOilTemp);
+			displayData->value = QString::number(values[displayPage]);
 			displayData->unit = "°C";
 			displayData->rangeText = "";
 			break;
-		case 3:
+		case Global::ControlPage::Consumption:
+            // Page 3
+            offset = 0;
+            displayPage = getDisplayPage(page) + offset;
 			displayData->title = "Consumption";
-			displayData->value = QString::number(mConsumption);
+			displayData->value = QString::number(values[displayPage]);
 			displayData->unit = "mpg";
 			displayData->rangeText = "";
 			break;
-		case 4:
+		case Global::ControlPage::AvgConsumption:
+            // Page 4
+            offset = 0;
+            displayPage = getDisplayPage(page) + offset;
 			displayData->title = "Avg. Consumption";
-			displayData->value = QString::number(mConsumptionArr[mValueRange]);
+			displayData->value = QString::number(values[displayPage + mValueRange]);
 			displayData->unit = "mpg";
 			displayData->rangeText = rangeTextArr[mValueRange];
 			break;
-		case 5:
+		case Global::ControlPage::Range:
+            // Page 5, but value 7
+            offset = 2;
+            displayPage = getDisplayPage(page) + offset;
 			displayData->title = "Range";
-			displayData->value = QString::number(mRange);
+			displayData->value = QString::number(values[displayPage]);
 			displayData->unit = "mi";
 			displayData->rangeText = "";
 			break;
-		case 6:
+		case Global::ControlPage::TravellingTime:
+            // Page 6, but value 8
+            offset = 2;
+            displayPage = getDisplayPage(page) + offset;
 			displayData->title = "Travelling Time";
-			displayData->value = QString::number(mTimeArr[mValueRange]);
+			displayData->value = QString::number(values[displayPage + mValueRange]);
 			displayData->unit = "hr";
 			displayData->rangeText = rangeTextArr[mValueRange];
 			break;
-		case 7:
+		case Global::ControlPage::Distance:
+            // Page 7, but value 11
+            offset = 4;
+            displayPage = getDisplayPage(page) + offset;
 			displayData->title = "Distance";
-			displayData->value = QString::number(mDistanceArr[mValueRange]);
+			displayData->value = QString::number(values[displayPage + mValueRange]);
 			displayData->unit = "mi";
 			displayData->rangeText = rangeTextArr[mValueRange];
 			break;
-		case 8:
+		case Global::ControlPage::AvgSpeed:
+            // Page 8, but value 14
+            offset = 6;
+            displayPage = getDisplayPage(page) + offset;
 			displayData->title = "Average Speed";
-			displayData->value = QString::number(mSpeedArr[mValueRange]);
+			displayData->value = QString::number(values[displayPage + mValueRange]);
 			displayData->unit = "mph";
 			displayData->rangeText = rangeTextArr[mValueRange];
 			break;
@@ -120,6 +148,10 @@ QPainterPath DisplayText::shape() const {
 	path.addPath(addTextNoTranslate(tempPath, f, 12, 25, 345, "mi"));
 	path.translate(mX, mY);
 	return path;
+}
+
+int DisplayText::getDisplayPage(int p) const {
+    return (p - 1);
 }
 
 QPainterPath DisplayText::addText(QPainterPath path, QFont f, int pt, qreal x, qreal y, const QString& t, bool o)  {
@@ -182,6 +214,11 @@ void DisplayText::setPage(int p) {
 [[maybe_unused]] void DisplayText::setValueRange(int vr) {
 	this->mValueRange = vr;
 	update();
+}
+
+void DisplayText::setValue(Global::ControlPage cpage, double cvalue) {
+    values.emplace_back(cvalue);
+    update();
 }
 
 //</editor-fold>

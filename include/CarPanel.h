@@ -13,6 +13,7 @@
 #include "Speedometer.h"
 #include "Indicator.h"
 #include "Background.h"
+#include "XMLParser.h"
 
 class CarPanel : public QWidget {
     Q_OBJECT
@@ -28,6 +29,7 @@ public:
 	Background *background;
 	QGraphicsScene *scene;
 	QGraphicsView *view;
+    XMLParser *parser;
 private:
     QGridLayout *layout;
 	QAction *showControl;

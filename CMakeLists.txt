@@ -32,7 +32,7 @@ set(source_gui
         src/RevCounter.cpp
         src/Dial.cpp
         src/Indicator.cpp
-        src/ControlXMLParser.cpp
+        src/XMLParser.cpp
         )
 
 add_executable(CarPanel ${source_gui})

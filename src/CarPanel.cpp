@@ -12,7 +12,8 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
                                                              scene(new QGraphicsScene),
                                                              view(new QGraphicsView),
                                                              background(new Background("Background")),
-                                                             showControl(new QAction("Show Control")) {
+                                                             showControl(new QAction("Show Control")),
+                                                             parser(new XMLParser("Parser")) {
     setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
     setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -55,10 +56,10 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
 
     setLayout(layout);
 
-    connect(ctrl, &Control::speedChanged, this->right->dial->needle, &DialNeedle::setAngle);
-    connect(ctrl, &Control::speedChanged, this->center->text, &DisplayText::setSpeed);
-    connect(ctrl, &Control::revChanged, this->left->dial->needle, &DialNeedle::setAngle);
-    connect(ctrl, &Control::pageChanged, this->center->text, &DisplayText::setPage);
+    connect(ctrl, &Control::speedChanged, right->dial->needle, &DialNeedle::setAngle);
+    connect(ctrl, &Control::speedChanged, center->text, &DisplayText::setSpeed);
+    connect(ctrl, &Control::revChanged, left->dial->needle, &DialNeedle::setAngle);
+    connect(ctrl, &Control::pageChanged, center->text, &DisplayText::setPage);
     connect(this, &CarPanel::closeSignal, ctrl, &Control::deleteLater);
 
     connect(ctrl, &Control::toggleLInd, leftInd, &Indicator::toggle);
@@ -66,7 +67,12 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
     connect(ctrl, &Control::toggleRInd, rightInd, &Indicator::toggle);
     connect(ctrl, &Control::setRInd, rightInd, &Indicator::setState);
     connect(this, &CarPanel::customContextMenuRequested, this, &CarPanel::showRClickMenu);
-    connect(ctrl, &Control::rangeChanged, this->center->text, &DisplayText::setValueRange);
+    connect(ctrl, &Control::rangeChanged, center->text, &DisplayText::setValueRange);
+    connect(ctrl, &Control::valueChanged, center->text, &DisplayText::setValue);
+    connect(parser, &XMLParser::setValue, center->text, &DisplayText::setValue);
+    connect(parser, &XMLParser::setValue, ctrl, &Control::setValue);
+
+    parser->parseXML();
 }
 
 void CarPanel::showRClickMenu(const QPoint &p) {

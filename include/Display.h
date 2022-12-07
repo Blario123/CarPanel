@@ -12,6 +12,8 @@
 #include <QFontMetricsF>
 #include <utility>
 
+#include "Global.h"
+
 class DisplayLogo;
 class DisplayBorder;
 class DisplayText;
@@ -115,7 +117,6 @@ public slots:
 };
 
 class DisplayText : public QObject, public QGraphicsItem {
-
 Q_OBJECT
 Q_INTERFACES(QGraphicsItem)
 public:
@@ -125,18 +126,7 @@ public:
 															mX(0),
 															mY(0),
 															mSpeed(0),
-															mConsumption(0),
-															mOilTemp(0),
-															mWarning(0),
-															mTrip(0),
-															mCompTrip(0),
-															mRange(0),
-															mTemp(0),
 															valuePt(65),
-															mConsumptionArr{},
-															mSpeedArr{},
-															mTimeArr{},
-															mDistanceArr{},
 															rangeTextArr{"Since Start", "Since Refuel", "Long-term"},
 															gearTextArr{"", "R", "1", "2", "3", "4", "5", "6"} {
 		hide();
@@ -152,7 +142,9 @@ public slots:
 	void setSpeed(qreal);
 	void setPage(int);
 	[[maybe_unused]] void setValueRange(int);
+    void setValue(Global::ControlPage cpage, double cvalue);
 private:
+    int getDisplayPage(int) const;
 	static QPainterPath addText(QPainterPath, QFont, int, qreal, qreal, const QString&, bool);
 	static QPainterPath addValue(QPainterPath, QFont, int, qreal, qreal, const QString&, bool);
 	static QPainterPath addTextNoTranslate(QPainterPath, QFont, int, qreal, qreal, const QString&);
@@ -166,17 +158,11 @@ private:
 	qreal 	mX,
 			mY,
 			mSpeed,
-			mConsumption,
-			mOilTemp,
-			mWarning,
 			mTrip,
 			mCompTrip,
-			mRange,
 			mTemp;
 	int valuePt;
 	inline static qreal mRightPos;
-private:
-	// Arrays for display values. 0: since start, 1: since refuel, 2: long term
 	qreal 	mConsumptionArr[3],
 			mSpeedArr[3],
 			mTimeArr[3],
@@ -186,6 +172,7 @@ private:
 	int page = 0,
 		mValueRange = 0,
 		mGear = 0;
+    std::vector<double> values;
 };
 
 class DisplayTime : public QObject, public QGraphicsItem {

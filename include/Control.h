@@ -15,7 +15,6 @@
 #include <QValidator>
 
 #include "Global.h"
-#include "ControlXMLParser.h"
 
 class ControlSpinBox;
 
@@ -26,10 +25,12 @@ public:
 	~Control() override = default;
 	QSlider *speedSlider;
 	QSlider *revSlider;
+public slots:
+    void setValue(Global::ControlPage, double);
 private slots:
 	void setSpeed(int value);
 	void setRev(int value);
-    void onItemDoubleClicked(QTreeWidgetItem *, int);
+    static void onItemDoubleClicked(QTreeWidgetItem *, int);
     void onLeftIndicatorClicked();
     void onRightIndicatorClicked();
     void onHazardClicked();
@@ -43,6 +44,7 @@ signals:
     void setLInd(Global::IndicatorState);
     void setRInd(Global::IndicatorState);
     void rangeChanged(Global::ControlPageRange);
+    void valueChanged(Global::ControlPage, double);
 private:
     QMetaObject::Connection connection;
     QTimer *indicatorTimer;
@@ -73,7 +75,8 @@ private:
     bool doHazard = false;
     qreal rangeIndex;
     int timerCount;
-    XMLParser *parser;
+    int itemCount = 0;
+    int rangeCount = 0;
 };
 
 class ControlSpinBox : public QWidget {
@@ -133,10 +136,11 @@ private:
     QPushButton *downArrow;
     QHBoxLayout *layout;
     QVBoxLayout *buttonLayout;
+
 signals:
     void valueChanged(int);
 public slots:
-    void setIndex(qreal value) {
+    void setIndex(int value) {
         index = value;
         update();
     }

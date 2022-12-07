@@ -19,16 +19,16 @@
                 <xsd:element name="consumption">
                     <xsd:complexType>
                         <xsd:sequence>
-                            <xsd:element name="value" type="xsd:integer"/>
+                            <xsd:element name="value" type="xsd:decimal"/>
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
                 <xsd:element name="avgConsumption">
                     <xsd:complexType>
                         <xsd:sequence>
-                            <xsd:element name="sinceStart" type="xsd:integer"/>
-                            <xsd:element name="sinceRefuel" type="xsd:integer"/>
-                            <xsd:element name="longTerm" type="xsd:integer"/>
+                            <xsd:element name="sinceStart" type="xsd:decimal"/>
+                            <xsd:element name="sinceRefuel" type="xsd:decimal"/>
+                            <xsd:element name="longTerm" type="xsd:decimal"/>
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
@@ -42,27 +42,27 @@
                 <xsd:element name="travellingTime">
                     <xsd:complexType>
                         <xsd:sequence>
-                            <xsd:element name="sinceStart" type="xsd:integer"/>
-                            <xsd:element name="sinceRefuel" type="xsd:integer"/>
-                            <xsd:element name="longTerm" type="xsd:integer"/>
+                            <xsd:element name="sinceStart" type="xsd:decimal"/>
+                            <xsd:element name="sinceRefuel" type="xsd:decimal"/>
+                            <xsd:element name="longTerm" type="xsd:decimal"/>
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
                 <xsd:element name="distance">
                     <xsd:complexType>
                         <xsd:sequence>
-                            <xsd:element name="sinceStart" type="xsd:integer"/>
-                            <xsd:element name="sinceRefuel" type="xsd:integer"/>
-                            <xsd:element name="longTerm" type="xsd:integer"/>
+                            <xsd:element name="sinceStart" type="xsd:decimal"/>
+                            <xsd:element name="sinceRefuel" type="xsd:decimal"/>
+                            <xsd:element name="longTerm" type="xsd:decimal"/>
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
                 <xsd:element name="avgSpeed">
                     <xsd:complexType>
                         <xsd:sequence>
-                            <xsd:element name="sinceStart" type="xsd:integer"/>
-                            <xsd:element name="sinceRefuel" type="xsd:integer"/>
-                            <xsd:element name="longTerm" type="xsd:integer"/>
+                            <xsd:element name="sinceStart" type="xsd:decimal"/>
+                            <xsd:element name="sinceRefuel" type="xsd:decimal"/>
+                            <xsd:element name="longTerm" type="xsd:decimal"/>
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>

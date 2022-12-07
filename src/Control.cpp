@@ -27,7 +27,7 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
                                                         hazardButton(new QPushButton("Hazard")),
                                                         rangeButton(new QPushButton("Change Range")),
                                                         rangeIndex(0),
-                                                        parser(new XMLParser("Parser")) {
+                                                        timerCount(0) {
     indicatorTimer->start(500);
     speedLineEdit->setText(QString::number(speedSlider->value()));
     revLineEdit->setText(QString::number(revSlider->value()));
@@ -42,10 +42,7 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
     revSlider->setOrientation(Qt::Horizontal);
     speedSlider->setFixedWidth(500);
 
-    tripTree->setHeaderLabels({"", "Value"});
-    auto *tempItem = new QTreeWidgetItem;
-    tripTree->addTopLevelItem(tempItem);
-
+    tripTree->setHeaderLabels({"Page", "Range", "Value"});
 
     tripLayout->addWidget(tripTree);
     tripBox->setLayout(tripLayout);
@@ -185,4 +182,36 @@ void Control::onShortIndicate(Global::IndicatorSide side) {
             emit (side == Global::IndicatorSide::Left) ? setLInd(Global::IndicatorState::Off) : setRInd(Global::IndicatorState::Off);
         }
     });
+}
+
+void Control::setValue(Global::ControlPage page, double value) {
+    // Create an empty QTreeWidgetItem
+    auto *item = new QTreeWidgetItem;
+    // Create Strings to be used in the item. pageName can be initialised with the QVariant of Global::ControlPage
+    QString pageName = QVariant::fromValue(Global::ControlPage(page)).toString();
+    QString rangeName = "";
+    // Discount any itemCount below 0 as the index cannot be less than 0
+    if(itemCount > 0) {
+        // If the current pageName equals the pageName of the previous item gathered through tripTree->topLevelItem
+        // the rangeName of the previous item can be set to the QVariant of Global::ControlPageRange as well as the current item
+        if(tripTree->topLevelItem(itemCount - 1)->data(0, 0).toString() == pageName) {
+            if(rangeCount == 0) {
+                tripTree->topLevelItem(itemCount - 1)->setData(1, Qt::DisplayRole, QVariant::fromValue(Global::ControlPageRange(rangeCount++)).toString());
+            }
+            rangeName = QVariant::fromValue(Global::ControlPageRange(rangeCount++)).toString();
+        } else {
+            // If there is no match, the range matching counter can be reset
+            rangeCount = 0;
+        }
+    }
+    // Create the structure of the item to be added
+    item->setText(0, pageName);
+    item->setText(1, rangeName);
+    item->setData(2, Qt::EditRole, value);
+    // Increase the count of the currently inserted item
+    itemCount++;
+    // Insert the item into tripTree and resize the first column as the pageName will not fit by default
+    tripTree->addTopLevelItem(item);
+    tripTree->resizeColumnToContents(0);
+    update();
 }

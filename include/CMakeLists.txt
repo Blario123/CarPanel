@@ -9,7 +9,7 @@ add_library(
         Indicator.h
         RevCounter.h
         Speedometer.h
-        ControlXMLParser.h
+        XMLParser.h
 )
 
 target_link_libraries(include Qt::Core Qt::Gui Qt::Widgets PkgConfig::LIBXMLXX)

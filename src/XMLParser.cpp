@@ -1,20 +1,45 @@
-#include "ControlXMLParser.h"
+#include "XMLParser.h"
 #include <QtCore/QtCore>
 
-XMLParser::XMLParser(const QString &name) : QObject(), mName(name + ":"), schemaFile(nullptr), xmlFile(nullptr) {
-    if(parseXML("CarPanel.xml")) {
+XMLParser::XMLParser(const QString &name) : QObject(),
+                                            mName(name + ":"),
+                                            schemaFile(nullptr),
+                                            xmlFile(nullptr),
+                                            parsed(false),
+                                            xmlFileContents("") {
+}
+
+void XMLParser::parseXML() {
+    if(loadXML("CarPanel.xml")) {
         qDebug().noquote() << mName << "Parsed successfully";
+        parsed = true;
     } else {
-        qDebug().noquote() << mName << "Could not parse successfully\nSetting contents to known prepared xml contents";
+        qDebug().noquote() << mName << "Could not parse successfully\n" << mName << "Setting contents to known prepared xml contents";
         setFileContents();
         qDebug().noquote() << mName << "Attempting to parse xml file again.";
-        if(parseXML("CarPanel.xml")) {
-            qDebug().noquote() << mName << "Parsed successfully on attempt 2.";
+        if(loadXML("CarPanel.xml")) {
+            qDebug().noquote() << mName << "Parsed successfully";
+            parsed = true;
+        }
+    }
+    if(parsed) {
+        int value = 0;
+        std::list<xmlpp::Node*> nodeList = parser.get_document()->get_root_node()->get_children();
+        for(auto i: nodeList) {
+            if(i->get_name() != "text") {
+                value++;
+                std::list<xmlpp::Node *> nodeList2 = i->get_children();
+                for(auto j: nodeList2) {
+                    if(j->get_name() != "text") {
+                        emit setValue(Global::ControlPage(value), j->eval_to_number(j->get_path()));
+                    }
+                }
+            }
         }
     }
 }
 
-bool XMLParser::parseXML(const QString &fileName) {
+bool XMLParser::loadXML(const QString &fileName) {
     try {
         schemaFile = new QFile(":/resources/parser.xsd");
         schemaFile->open(QFile::ReadOnly);
@@ -27,13 +52,13 @@ bool XMLParser::parseXML(const QString &fileName) {
             if(!xmlFile->isOpen()) {
                 qDebug().noquote() << mName << "Could not open read-write.\nAttempting to open read-only.";
                 xmlFile->open(QFile::ReadOnly);
+                writable = false;
             }
-            QByteArray xmlFileContents = xmlFile->readAll();
+            xmlFileContents = xmlFile->readAll();
             if(xmlFileContents.isEmpty()) {
                 qDebug().noquote() << mName << "Contents empty";
                 return false;
             }
-            xmlpp::DomParser parser;
             parser.parse_memory(xmlFileContents.toStdString());
             parser.set_throw_messages();
             validator.validate(parser.get_document());
