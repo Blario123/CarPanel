@@ -216,8 +216,13 @@ void DisplayText::setPage(int p) {
 	update();
 }
 
-void DisplayText::setValue(Global::ControlPage cpage, double cvalue) {
-    values.emplace_back(cvalue);
+void DisplayText::setValue(double cvalue, int index = -1) {
+    qDebug() << "TextIndex:" << index;
+    if(index == -1) {
+        values.emplace_back(cvalue);
+    } else {
+        values[index] = cvalue;
+    }
     update();
 }
 

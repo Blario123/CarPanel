@@ -69,8 +69,9 @@ CarPanel::CarPanel(const QString &name,QWidget *parent) : 	QWidget(parent),
     connect(this, &CarPanel::customContextMenuRequested, this, &CarPanel::showRClickMenu);
     connect(ctrl, &Control::rangeChanged, center->text, &DisplayText::setValueRange);
     connect(ctrl, &Control::valueChanged, center->text, &DisplayText::setValue);
+    connect(ctrl, &Control::valueChanged, parser, &XMLParser::writeValue);
     connect(parser, &XMLParser::setValue, center->text, &DisplayText::setValue);
-    connect(parser, &XMLParser::setValue, ctrl, &Control::setValue);
+    connect(parser, &XMLParser::setValueFromPage, ctrl, &Control::setValueFromPage);
 
     parser->parseXML();
 }

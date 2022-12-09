@@ -1,5 +1,4 @@
 #include "XMLParser.h"
-#include <QtCore/QtCore>
 
 XMLParser::XMLParser(const QString &name) : QObject(),
                                             mName(name + ":"),
@@ -22,19 +21,25 @@ void XMLParser::parseXML() {
             parsed = true;
         }
     }
-    if(parsed) {
-        int value = 0;
-        std::list<xmlpp::Node*> nodeList = parser.get_document()->get_root_node()->get_children();
-        for(auto i: nodeList) {
-            if(i->get_name() != "text") {
-                value++;
-                std::list<xmlpp::Node *> nodeList2 = i->get_children();
-                for(auto j: nodeList2) {
-                    if(j->get_name() != "text") {
-                        emit setValue(Global::ControlPage(value), j->eval_to_number(j->get_path()));
-                    }
-                }
+    if(!parsed) {
+        qDebug() << "Could not parse.\nSkipping...";
+        return;
+    }
+    int value = 0;
+    std::list<xmlpp::Node*> nodeList = parser.get_document()->get_root_node()->get_children();
+    for(auto i: nodeList) {
+        if(i->get_name() == "text") {
+            continue;
+        }
+        value++;
+        std::list<xmlpp::Node *> nodeList2 = i->get_children();
+        for(auto j: nodeList2) {
+            if(j->get_name() == "text") {
+                continue;
             }
+            pathList.emplace_back(j->get_path());
+            emit setValue(j->eval_to_number(j->get_path()), -1);
+            emit setValueFromPage(Global::ControlPage(value), j->eval_to_number(j->get_path()));
         }
     }
 }
@@ -79,4 +84,10 @@ void XMLParser::setFileContents() {
     xmlFile->resize(0);
     xmlFile->write(emptyXmlFile.readAll());
     xmlFile->flush();
+}
+
+void XMLParser::writeValue(int index, double value) {
+    xmlpp::Element *ele = parser.get_document()->get_root_node();
+    qDebug() << "Index:" << index;
+    qDebug() << pathList[index].c_str();
 }

@@ -28,6 +28,15 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
                                                         rangeButton(new QPushButton("Change Range")),
                                                         rangeIndex(0),
                                                         timerCount(0) {
+    QMetaEnum ePage = QMetaEnum::fromType<Global::ControlPage>();
+    QMetaEnum eRange = QMetaEnum::fromType<Global::ControlPageRange>();
+    for(int i = 0; i < ePage.keyCount(); i++) {
+        controlPageStringList.emplace_back(ePage.key(i));
+    }
+    for(int i = 0; i < eRange.keyCount(); i++) {
+        controlPageRangeStringList.emplace_back(eRange.key(i));
+    }
+
     indicatorTimer->start(500);
     speedLineEdit->setText(QString::number(speedSlider->value()));
     revLineEdit->setText(QString::number(revSlider->value()));
@@ -43,6 +52,7 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
     speedSlider->setFixedWidth(500);
 
     tripTree->setHeaderLabels({"Page", "Range", "Value"});
+    tripTree->blockSignals(true);
 
     tripLayout->addWidget(tripTree);
     tripBox->setLayout(tripLayout);
@@ -94,6 +104,10 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
     });
     connect(shortRightIndButton, &QPushButton::pressed, [=]() {
         onShortIndicate(Global::IndicatorSide::Right);
+    });
+    connect(tripTree, &QTreeWidget::itemChanged, [=](QTreeWidgetItem *i, int c) {
+        qDebug() << "Row:" << tripTree->indexFromItem(i).row();
+        emit valueChanged(i->data(2, 0).toDouble(), tripTree->indexFromItem(i).row());
     });
 }
 
@@ -184,7 +198,11 @@ void Control::onShortIndicate(Global::IndicatorSide side) {
     });
 }
 
-void Control::setValue(Global::ControlPage page, double value) {
+void Control::setValue(double a, int b) {
+
+}
+
+void Control::setValueFromPage(Global::ControlPage page, double value) {
     // Create an empty QTreeWidgetItem
     auto *item = new QTreeWidgetItem;
     // Create Strings to be used in the item. pageName can be initialised with the QVariant of Global::ControlPage
@@ -215,4 +233,17 @@ void Control::setValue(Global::ControlPage page, double value) {
     tripTree->resizeColumnToContents(0);
     tripTree->resizeColumnToContents(1);
     update();
+}
+
+void Control::showEvent(QShowEvent *event) {
+    tripTree->blockSignals(false);
+    QDialog::showEvent(event);
+}
+
+Global::ControlPage Control::getEnumFromString(QString s) {
+    return Global::ControlPage(controlPageStringList.indexOf(s));
+}
+
+Global::ControlPageRange Control::getEnumRangeFromString(QString s) {
+    return Global::ControlPageRange(controlPageRangeStringList.indexOf(s));
 }

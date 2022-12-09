@@ -26,7 +26,8 @@ public:
 	QSlider *speedSlider;
 	QSlider *revSlider;
 public slots:
-    void setValue(Global::ControlPage, double);
+    void setValue(double, int);
+    void setValueFromPage(Global::ControlPage, double);
 private slots:
 	void setSpeed(int value);
 	void setRev(int value);
@@ -44,7 +45,7 @@ signals:
     void setLInd(Global::IndicatorState);
     void setRInd(Global::IndicatorState);
     void rangeChanged(Global::ControlPageRange);
-    void valueChanged(Global::ControlPage, double);
+    void valueChanged(int, double);
 private:
     QMetaObject::Connection connection;
     QTimer *indicatorTimer;
@@ -77,6 +78,12 @@ private:
     int timerCount;
     int itemCount = 0;
     int rangeCount = 0;
+    QList<QString> controlPageStringList;
+    QList<QString> controlPageRangeStringList;
+    Global::ControlPage getEnumFromString(QString);
+    Global::ControlPageRange getEnumRangeFromString(QString);
+protected:
+    void showEvent(QShowEvent *event) override;
 };
 
 class ControlSpinBox : public QWidget {

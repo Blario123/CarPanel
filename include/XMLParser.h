@@ -13,6 +13,8 @@ Q_OBJECT
 public:
     explicit XMLParser(const QString &);
     void parseXML();
+public slots:
+    void writeValue(int, double);
 private:
     bool loadXML(const QString &fileName);
     bool parsed;
@@ -23,8 +25,10 @@ private:
     QString mName;
     QByteArray xmlFileContents;
     xmlpp::DomParser parser;
+    std::vector<std::string> pathList;
 signals:
-    void setValue(Global::ControlPage, double);
+    void setValue(double, int);
+    void setValueFromPage(Global::ControlPage, double);
 };
 
 #endif //XMLPARSER_H
