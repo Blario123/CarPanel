@@ -106,8 +106,7 @@ Control::Control(const QString &name,QWidget *parent) : QDialog(parent),
         onShortIndicate(Global::IndicatorSide::Right);
     });
     connect(tripTree, &QTreeWidget::itemChanged, [=](QTreeWidgetItem *i, int c) {
-        qDebug() << "Row:" << tripTree->indexFromItem(i).row();
-        emit valueChanged(i->data(2, 0).toDouble(), tripTree->indexFromItem(i).row());
+        emit valueChanged(tripTree->indexFromItem(i).row(), i->data(2, 0).toDouble());
     });
 }
 

@@ -142,7 +142,7 @@ public slots:
 	void setSpeed(qreal);
 	void setPage(int);
 	[[maybe_unused]] void setValueRange(int);
-    void setValue(double, int);
+    void setValue(int, double);
 private:
     int getDisplayPage(int) const;
 	static QPainterPath addText(QPainterPath, QFont, int, qreal, qreal, const QString&, bool);

@@ -27,7 +27,7 @@ private:
     xmlpp::DomParser parser;
     std::vector<std::string> pathList;
 signals:
-    void setValue(double, int);
+    void setValue(int, double);
     void setValueFromPage(Global::ControlPage, double);
 };
 

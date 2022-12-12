@@ -38,7 +38,7 @@ void XMLParser::parseXML() {
                 continue;
             }
             pathList.emplace_back(j->get_path());
-            emit setValue(j->eval_to_number(j->get_path()), -1);
+            emit setValue(-1, j->eval_to_number(j->get_path()));
             emit setValueFromPage(Global::ControlPage(value), j->eval_to_number(j->get_path()));
         }
     }
